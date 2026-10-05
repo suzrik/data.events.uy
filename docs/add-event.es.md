@@ -45,7 +45,7 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 
 ## Fechas y participación
 
-Las líneas `end_date`, `status` y `entry` son opcionales: si no las necesitás, no las pongas. En la plantilla vienen comentadas con `# `; para usar una, borrá esas dos primeras marcas.
+Las líneas `end_date`, `status` y `entry` son opcionales: si no las necesitás, no las pongas. En la plantilla vienen comentadas, escritas así: `#end_date: 2026-10-12`. Para usar una, borrá el `#` que tiene adelante.
 
 **Solo se anunció el mes.** Si el organizador todavía no dijo el día, escribí solo el año y el mes:
 
@@ -72,11 +72,18 @@ status: tentative
 **Quién puede participar.** Con `entry` indicás el tipo de participación:
 
 - `open`: puede participar cualquiera que se inscriba. Es lo que se entiende si no escribís la línea.
-- `license`: hace falta una licencia, ser socio de un club u otro requisito.
-- `elite`: participan solo federados o profesionales; el público va a mirar.
+- `license`: pueden participar aficionados que cumplan una condición, por ejemplo una licencia por el día o por la temporada, o ser socio de un club.
+- `elite`: corren solo deportistas federados o profesionales; para el resto es un evento para ir a ver.
 
 ```yaml
 entry: license
+```
+
+**Cuando falta información.** Un `date` de solo mes se puede combinar con `status: tentative` si el organizador todavía no anunció la edición y el mes sale de la edición del año pasado; en ese caso no adivines el día. Como mínimo hay que saber el mes: un evento que todavía no tiene ni mes no se puede agregar.
+
+```yaml
+date: 2027-04
+status: tentative
 ```
 
 ## Errores frecuentes

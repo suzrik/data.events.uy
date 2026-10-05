@@ -45,7 +45,7 @@ That's it. An automatic check reviews the format within a couple of minutes. If 
 
 ## Dates and participation
 
-The `end_date`, `status` and `entry` lines are optional: if you do not need them, leave them out. In the template they start commented out with `# `; to use one, delete that mark at its start.
+The `end_date`, `status` and `entry` lines are optional: if you do not need them, leave them out. In the template they come commented out, written like this: `#end_date: 2026-10-12`. To use one, delete the `#` in front of the line.
 
 **Only the month has been announced.** If the organizer has not said the day yet, write just the year and month:
 
@@ -72,11 +72,18 @@ status: tentative
 **Who can take part.** `entry` says what kind of participation the event has:
 
 - `open`: anyone who registers can take part. This is assumed if you do not write the line.
-- `license`: a licence, club membership or another requirement is needed.
-- `elite`: only federated or professional athletes take part; the public comes to watch.
+- `license`: amateurs may take part if they meet a condition, for example a license for the day or the season, or membership of a club.
+- `elite`: only federated or professional athletes race; for everyone else it is an event to watch.
 
 ```yaml
 entry: license
+```
+
+**When information is missing.** A month-only `date` can be combined with `status: tentative` when the organizer has not announced the edition and the month comes from last year's edition; in that case do not guess the day. At least the month must be known: an event with no month yet cannot be added.
+
+```yaml
+date: 2027-04
+status: tentative
 ```
 
 ## Common mistakes

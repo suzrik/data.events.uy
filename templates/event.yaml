@@ -15,20 +15,20 @@ name: Corrida Rambla 10K
 # Date: year-month-day. If the day is not announced yet, year-month only: 2026-10
 date: 2026-10-11
 
-# Las tres líneas siguientes son opcionales: para usar una, borrá el "# " del principio.
-# The next three lines are optional: to use one, delete the "# " at its start.
+# end_date, status y entry son opcionales. Para usar una de esas líneas, borrá el "#" que tiene adelante; si no la usás, dejala o borrala.
+# end_date, status and entry are optional. To use one of those lines, delete the "#" in front of it; if you do not use it, leave it or delete it.
 
 # Último día de un evento de varios días / Last day of a multi-day event
-# end_date: 2026-10-12
+#end_date: 2026-10-12
 
 # Fecha todavía sin confirmar por el organizador / Date not confirmed by the organizer yet
-# status: tentative
+#status: tentative
 
 # Quién puede participar / Who can take part: open | license | elite
 #   open: cualquiera que se inscriba (por defecto) / anyone who registers (default)
-#   license: hace falta licencia, ser socio de un club u otro requisito / a licence, club membership or another requirement
-#   elite: solo federados o profesionales; el público va a mirar / federated or professional athletes only; the public comes to watch
-# entry: open
+#   license: aficionados que cumplan un requisito (licencia, ser socio de un club) / amateurs who meet a condition (a license, club membership)
+#   elite: solo deportistas federados o profesionales; el público va a mirar / federated or professional athletes only; the public comes to watch
+#entry: open
 
 # Deporte / Sport: bike | run | roll
 sport: run
