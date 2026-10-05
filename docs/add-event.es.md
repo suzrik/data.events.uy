@@ -33,7 +33,7 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 | `end_date` | no | Último día de un evento de varios días, en formato año-mes-día. Tiene que ser posterior a `date`, a lo sumo 31 días después, y `date` tiene que incluir el día. | `2026-10-12` |
 | `status` | no | `tentative` si el organizador todavía no confirmó la fecha. El otro valor, `confirmed`, se entiende si no escribís la línea. | `tentative` |
 | `entry` | no | Quién puede participar: `open`, `license` o `elite`. Sin esta línea, el evento se considera abierto. | `license` |
-| `sport` | sí | `bike` (ciclismo), `run` (running) o `roll` (patinaje). | `run` |
+| `sport` | sí | `bike` (ciclismo), `run` (running de calle), `roll` (patinaje), `trail` (trail running) o `tri` (triatlón y duatlón). | `run` |
 | `city` | sí | Ciudad, escrita igual que en [cities.yaml](../cities.yaml). Si falta, agregala a esa lista en el mismo pull request. | `Montevideo` |
 | `venue` | no | Lugar de largada. Hasta 120 caracteres. | `Rambla de Pocitos` |
 | `distances` | no | Hasta 6 distancias de hasta 20 caracteres cada una, entre corchetes y separadas por comas. | `[10K, 5K]` |

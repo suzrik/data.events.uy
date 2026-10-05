@@ -82,7 +82,7 @@ func TestEventRules(t *testing.T) {
 		{"date wrong format", with("2026-10-11", "11/10/2026"), "date: must be a real date written as YYYY-MM-DD, or YYYY-MM when the day is not announced yet"},
 		{"date in another year", with("2026-10-11", "2027-01-10"), "date: year 2027 does not match the folder events/2026; move the file to events/2027/"},
 		{"sport missing", with("sport: run\n", ""), "sport: is required"},
-		{"sport unknown", with("sport: run", "sport: swim"), `sport: must be one of bike, run, roll, got "swim"`},
+		{"sport unknown", with("sport: run", "sport: swim"), `sport: must be one of bike, run, roll, trail, tri, got "swim"`},
 		{"city missing", with("city: Montevideo\n", ""), "city: is required"},
 		{"city not listed", with("city: Montevideo", "city: Atlantida"), `city: "Atlantida" is not in cities.yaml`},
 		{"venue too long", with("venue: Rambla de Pocitos", "venue: "+strings.Repeat("a", 121)), "venue: must be at most 120 characters, got 121"},
@@ -110,6 +110,14 @@ func TestEventRules(t *testing.T) {
 				t.Errorf("problem = %q, want it to contain %q", got[0], tt.want)
 			}
 		})
+	}
+}
+
+func TestEventAcceptsEverySport(t *testing.T) {
+	for _, sport := range []string{"bike", "run", "roll", "trail", "tri"} {
+		if got := problems(with("sport: run", "sport: "+sport)); len(got) != 0 {
+			t.Errorf("sport %q: want no problems, got %v", sport, got)
+		}
 	}
 }
 

@@ -42,7 +42,7 @@ const (
 )
 
 var (
-	sports   = []string{"bike", "run", "roll"}
+	sports   = []string{"bike", "run", "roll", "trail", "tri"}
 	statuses = []string{"confirmed", "tentative"}
 	entries  = []string{"open", "license", "elite"}
 )

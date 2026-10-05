@@ -33,7 +33,7 @@ That's it. An automatic check reviews the format within a couple of minutes. If 
 | `end_date` | no | Last day of a multi-day event, as year-month-day. Must be after `date`, at most 31 days later, and `date` must include the day. | `2026-10-12` |
 | `status` | no | `tentative` if the organizer has not confirmed the date yet. The other value, `confirmed`, is assumed if you leave the line out. | `tentative` |
 | `entry` | no | Who can take part: `open`, `license` or `elite`. Without this line, the event counts as open. | `license` |
-| `sport` | yes | `bike` (cycling), `run` (running) or `roll` (skating). | `run` |
+| `sport` | yes | `bike` (cycling), `run` (road running), `roll` (skating), `trail` (trail running) or `tri` (triathlon and duathlon). | `run` |
 | `city` | yes | City, spelled exactly as in [cities.yaml](../cities.yaml). If it is missing, add it to that list in the same pull request. | `Montevideo` |
 | `venue` | no | Start venue. Up to 120 characters. | `Rambla de Pocitos` |
 | `distances` | no | Up to 6 distances of up to 20 characters each, in square brackets, separated by commas. | `[10K, 5K]` |
