@@ -38,13 +38,21 @@ const (
 	maxDistances   = 6
 	maxDistance    = 20
 	maxDescription = 500
+	maxEventDays   = 31 // longest gap between date and end_date
 )
 
-var sports = []string{"bike", "run", "roll"}
+var (
+	sports   = []string{"bike", "run", "roll"}
+	statuses = []string{"confirmed", "tentative"}
+	entries  = []string{"open", "license", "elite"}
+)
 
 type event struct {
 	Name        string            `yaml:"name"`
 	Date        string            `yaml:"date"`
+	EndDate     string            `yaml:"end_date"`
+	Status      string            `yaml:"status"`
+	Entry       string            `yaml:"entry"`
 	Sport       string            `yaml:"sport"`
 	City        string            `yaml:"city"`
 	Venue       string            `yaml:"venue"`
@@ -76,7 +84,7 @@ const (
 	msgDuplicateKey = "appears more than once; keep only one"
 )
 
-var eventFields = []string{"name", "date", "sport", "city", "venue", "distances", "links", "description"}
+var eventFields = []string{"name", "date", "end_date", "status", "entry", "sport", "city", "venue", "distances", "links", "description"}
 var linkFields = []string{"site", "instagram", "facebook", "register"}
 
 // Event checks the contents of one event file. year is the name of the
@@ -162,6 +170,12 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 			shapeBad[key] = !scalar(key, val, &e.Name)
 		case "date":
 			shapeBad[key] = !scalar(key, val, &e.Date)
+		case "end_date":
+			shapeBad[key] = !scalar(key, val, &e.EndDate)
+		case "status":
+			shapeBad[key] = !scalar(key, val, &e.Status)
+		case "entry":
+			shapeBad[key] = !scalar(key, val, &e.Entry)
 		case "sport":
 			shapeBad[key] = !scalar(key, val, &e.Sport)
 		case "city":
@@ -255,15 +269,56 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 		}
 	}
 
+	var (
+		start      time.Time // the date field, when it is a real day
+		monthOnly  bool      // the date field is a real YYYY-MM
+		dateIsGood bool      // the date field is a real day or a real month
+	)
 	if !shapeBad["date"] {
-		switch _, err := time.Parse("2006-01-02", e.Date); {
+		day, dayErr := time.Parse("2006-01-02", e.Date)
+		_, monthErr := time.Parse("2006-01", e.Date)
+		switch {
 		case e.Date == "":
 			add("date", "is required")
-		case err != nil:
-			add("date", "must be a real date written as YYYY-MM-DD, got %q", e.Date)
-		case e.Date[:4] != year:
-			add("date", "year %s does not match the folder events/%s; move the file to events/%[1]s/", e.Date[:4], year)
+		case dayErr != nil && monthErr != nil:
+			add("date", "must be a real date written as YYYY-MM-DD, or YYYY-MM when the day is not announced yet, got %q", e.Date)
+		default:
+			dateIsGood = true
+			if dayErr == nil {
+				start = day
+			} else {
+				monthOnly = true
+			}
+			if e.Date[:4] != year {
+				add("date", "year %s does not match the folder events/%s; move the file to events/%[1]s/", e.Date[:4], year)
+			}
 		}
+	}
+
+	if e.EndDate != "" && !shapeBad["end_date"] {
+		end, err := time.Parse("2006-01-02", e.EndDate)
+		switch {
+		case err != nil:
+			add("end_date", "must be a real date written as YYYY-MM-DD, got %q", e.EndDate)
+		case dateIsGood && monthOnly:
+			add("end_date", "needs a start date with a day: write date as YYYY-MM-DD, or remove end_date")
+		case dateIsGood && !end.After(start):
+			add("end_date", "must be later than date (%s); for a one-day event remove end_date", e.Date)
+		case dateIsGood && end.After(start.AddDate(0, 0, maxEventDays)):
+			add("end_date", "is more than %d days after date (%s); check the month and the year", maxEventDays, e.Date)
+		}
+	}
+
+	if e.Status != "" && !shapeBad["status"] && !slices.Contains(statuses, e.Status) {
+		add("status", "must be confirmed or tentative, got %q", e.Status)
+	}
+
+	if e.Entry != "" && !shapeBad["entry"] && !slices.Contains(entries, e.Entry) {
+		msg := "must be one of " + strings.Join(entries, ", ") + ", got %q"
+		if e.Entry == "licence" {
+			msg += "; write it as license"
+		}
+		add("entry", msg, e.Entry)
 	}
 
 	if !shapeBad["sport"] {

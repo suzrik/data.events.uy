@@ -75,8 +75,8 @@ func TestEventRules(t *testing.T) {
 		{"name blank", with("name: Corrida Rambla 10K", `name: "   "`), "name: is required"},
 		{"name too long", with("name: Corrida Rambla 10K", "name: "+strings.Repeat("a", 121)), "name: must be at most 120 characters, got 121"},
 		{"date missing", with("date: 2026-10-11\n", ""), "date: is required"},
-		{"date impossible", with("2026-10-11", "2026-02-30"), `date: must be a real date written as YYYY-MM-DD, got "2026-02-30"`},
-		{"date wrong format", with("2026-10-11", "11/10/2026"), "date: must be a real date written as YYYY-MM-DD"},
+		{"date impossible", with("2026-10-11", "2026-02-30"), `date: must be a real date written as YYYY-MM-DD, or YYYY-MM when the day is not announced yet, got "2026-02-30"`},
+		{"date wrong format", with("2026-10-11", "11/10/2026"), "date: must be a real date written as YYYY-MM-DD, or YYYY-MM when the day is not announced yet"},
 		{"date in another year", with("2026-10-11", "2027-01-10"), "date: year 2027 does not match the folder events/2026; move the file to events/2027/"},
 		{"sport missing", with("sport: run\n", ""), "sport: is required"},
 		{"sport unknown", with("sport: run", "sport: swim"), `sport: must be one of bike, run, roll, got "swim"`},
@@ -304,5 +304,78 @@ func TestEventCitiesUnavailable(t *testing.T) {
 	got := Event("events/2026/x.yaml", []byte(with("city: Montevideo\n", "")), "2026", nil)
 	if len(got) != 1 || !strings.Contains(got[0].String(), "city: is required") {
 		t.Errorf("city is required must still apply: %v", got)
+	}
+}
+
+const event2027 = `name: Vuelta de Prueba
+date: 2027-02-25
+sport: bike
+city: Montevideo
+links:
+  site: https://example.org
+description:
+  es: Texto.
+`
+
+func problems2027(src string) []string {
+	var out []string
+	for _, p := range Event("events/2027/x.yaml", []byte(src), "2027", testCities) {
+		out = append(out, p.String())
+	}
+	return out
+}
+
+func TestEventDateEndDateStatusEntry(t *testing.T) {
+	const p = "events/2027/x.yaml: "
+	const dateMsg = "date: must be a real date written as YYYY-MM-DD, or YYYY-MM when the day is not announced yet, got "
+	const laterMsg = p + "end_date: must be later than date (2027-02-25); for a one-day event remove end_date"
+	const entryMsg = "entry: must be one of open, license, elite, got "
+	rep := func(old, new string) string { return strings.Replace(event2027, old, new, 1) }
+	add := func(lines string) string { return event2027 + lines }
+	tests := []struct {
+		name, src string
+		want      []string
+	}{
+		{"1 month only", rep("2027-02-25", "2027-04"), nil},
+		{"2 month 13", rep("2027-02-25", "2027-13"), []string{p + dateMsg + `"2027-13"`}},
+		{"3 month one digit", rep("2027-02-25", "2027-4"), []string{p + dateMsg + `"2027-4"`}},
+		{"4 year only", rep("2027-02-25", "2027"), []string{p + dateMsg + `"2027"`}},
+		{"5 impossible day", rep("2027-02-25", "2027-02-30"), []string{p + dateMsg + `"2027-02-30"`}},
+		{"6 month only, other year", rep("2027-02-25", "2026-04"), []string{p + "date: year 2026 does not match the folder events/2027; move the file to events/2026/"}},
+		{"7 end date", add("end_date: 2027-02-28\n"), nil},
+		{"8 end date equals date", add("end_date: 2027-02-25\n"), []string{laterMsg}},
+		{"9 end date before date", add("end_date: 2027-02-20\n"), []string{laterMsg}},
+		{"10 exactly 31 days", add("end_date: 2027-03-28\n"), nil},
+		{"11 32 days", add("end_date: 2027-03-29\n"), []string{p + "end_date: is more than 31 days after date (2027-02-25); check the month and the year"}},
+		{"12 across the year", rep("2027-02-25", "2027-12-28") + "end_date: 2028-01-03\n", nil},
+		{"13 end date month only", add("end_date: 2027-02\n"), []string{p + `end_date: must be a real date written as YYYY-MM-DD, got "2027-02"`}},
+		{"14 start without day", rep("2027-02-25", "2027-02") + "end_date: 2027-02-28\n", []string{p + "end_date: needs a start date with a day: write date as YYYY-MM-DD, or remove end_date"}},
+		{"15 bad date and end date", rep("2027-02-25", "pronto") + "end_date: 2027-02-28\n", []string{p + dateMsg + `"pronto"`}},
+		{"16 end date as list", add("end_date: [2027-02-28]\n"), []string{p + "end_date: must be a single value on one line, not a list or nested lines"}},
+		{"17 end date comment", add("end_date: 2027-02-28 # a confirmar\n"), []string{p + `end_date: the text after " #" is ignored by YAML ("# a confirmar"); put the whole value in double quotes, or remove the comment`}},
+		{"18 status tentative", add("status: tentative\n"), nil},
+		{"18 status confirmed", add("status: confirmed\n"), nil},
+		{"19 status maybe", add("status: maybe\n"), []string{p + `status: must be confirmed or tentative, got "maybe"`}},
+		{"20 entry open", add("entry: open\n"), nil},
+		{"20 entry license", add("entry: license\n"), nil},
+		{"20 entry elite", add("entry: elite\n"), nil},
+		{"21 entry licence", add("entry: licence\n"), []string{p + entryMsg + `"licence"; write it as license`}},
+		{"22 entry pro", add("entry: pro\n"), []string{p + entryMsg + `"pro"`}},
+		{"23 empty values", add("end_date:\nstatus:\nentry:\n"), nil},
+		{"24 status twice", add("status: tentative\nstatus: tentative\n"), []string{p + "status: appears more than once; keep only one"}},
+		{"25 misspelled field", add("enddate: 2027-02-28\n"), []string{p + `unknown field "enddate"`}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := problems2027(tt.src)
+			if len(got) != len(tt.want) {
+				t.Fatalf("problems = %q, want %q", got, tt.want)
+			}
+			for i := range got {
+				if got[i] != tt.want[i] {
+					t.Errorf("problem %d = %q, want %q", i, got[i], tt.want[i])
+				}
+			}
+		})
 	}
 }
