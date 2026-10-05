@@ -1,6 +1,9 @@
 package validate
 
 import (
+	"fmt"
+	"os"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -352,7 +355,8 @@ func TestEventDateEndDateStatusEntry(t *testing.T) {
 		{"14 start without day", rep("2027-02-25", "2027-02") + "end_date: 2027-02-28\n", []string{p + "end_date: needs a start date with a day: write date as YYYY-MM-DD, or remove end_date"}},
 		{"15 bad date and end date", rep("2027-02-25", "pronto") + "end_date: 2027-02-28\n", []string{p + dateMsg + `"pronto"`}},
 		{"16 end date as list", add("end_date: [2027-02-28]\n"), []string{p + "end_date: must be a single value on one line, not a list or nested lines"}},
-		{"17 end date comment", add("end_date: 2027-02-28 # a confirmar\n"), []string{p + `end_date: the text after " #" is ignored by YAML ("# a confirmar"); put the whole value in double quotes, or remove the comment`}},
+		{"17 end date comment", add("end_date: 2027-02-28 # a confirmar\n"), []string{p + `end_date: the text after " #" is ignored by YAML ("# a confirmar"); remove it, or put the note in the description`}},
+		{"17 status comment", add("status: tentative # según 2026\n"), []string{p + `status: the text after " #" is ignored by YAML ("# según 2026"); remove it, or put the note in the description`}},
 		{"18 status tentative", add("status: tentative\n"), nil},
 		{"18 status confirmed", add("status: confirmed\n"), nil},
 		{"19 status maybe", add("status: maybe\n"), []string{p + `status: must be confirmed or tentative, got "maybe"`}},
@@ -364,6 +368,18 @@ func TestEventDateEndDateStatusEntry(t *testing.T) {
 		{"23 empty values", add("end_date:\nstatus:\nentry:\n"), nil},
 		{"24 status twice", add("status: tentative\nstatus: tentative\n"), []string{p + "status: appears more than once; keep only one"}},
 		{"25 misspelled field", add("enddate: 2027-02-28\n"), []string{p + `unknown field "enddate"`}},
+		{"26 status cancelled", add("status: cancelled\n"), []string{p + `status: must be confirmed or tentative, got "cancelled"; to cancel an event, delete its file in a pull request`}},
+		{"26 status Cancelado", add("status: Cancelado\n"), []string{p + `status: must be confirmed or tentative, got "Cancelado"; to cancel an event, delete its file in a pull request`}},
+		{"26 status suspendida", add("status: suspendida\n"), []string{p + `status: must be confirmed or tentative, got "suspendida"; to cancel an event, delete its file in a pull request`}},
+		{"27 status postponed", add("status: postponed\n"), []string{p + `status: must be confirmed or tentative, got "postponed"; write the new date, or the new month with status: tentative`}},
+		{"27 status pospuesta", add("status: pospuesta\n"), []string{p + `status: must be confirmed or tentative, got "pospuesta"; write the new date, or the new month with status: tentative`}},
+		{"28 entry licencia", add("entry: licencia\n"), []string{p + entryMsg + `"licencia"; write it as license`}},
+		{"28 entry Licence", add("entry: Licence\n"), []string{p + entryMsg + `"Licence"; write it as license`}},
+		{"29 entry élite", add("entry: élite\n"), []string{p + entryMsg + `"élite"; write it as elite`}},
+		{"30 entry abierta", add("entry: abierta\n"), []string{p + entryMsg + `"abierta"; write it as open`}},
+		{"31 status Tentative", add("status: Tentative\n"), []string{p + `status: must be confirmed or tentative, got "Tentative"; write it in lowercase`}},
+		{"31 entry ELITE", add("entry: ELITE\n"), []string{p + entryMsg + `"ELITE"; write it in lowercase`}},
+		{"31 entry padded", add("entry: \" open\"\n"), []string{p + entryMsg + `" open"; write it in lowercase`}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -378,4 +394,74 @@ func TestEventDateEndDateStatusEntry(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestEventIndentedFieldIsNamed(t *testing.T) {
+	const p = "events/2027/x.yaml: "
+	msg := func(line int, field string) string {
+		return fmt.Sprintf(`%sline %d: %q must start at the beginning of the line; remove the space before it`, p, line, field)
+	}
+
+	tmpl, err := os.ReadFile(repoRoot + "/templates/event.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(string(tmpl), "\n")
+	at := -1
+	for i, l := range lines {
+		if l == "#end_date: 2026-10-12" {
+			at = i
+			lines[i] = " end_date: 2026-10-12"
+		}
+	}
+	if at < 0 {
+		t.Fatal("template has no #end_date line")
+	}
+	cities, _, err := loadCities(os.DirFS(repoRoot))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var got []string
+	for _, pr := range Event("templates/event.yaml", []byte(strings.Join(lines, "\n")), "2026", cities) {
+		got = append(got, pr.String())
+	}
+	want := fmt.Sprintf(`templates/event.yaml: line %d: "end_date" must start at the beginning of the line; remove the space before it`, at+1)
+	if len(got) != 1 || got[0] != want {
+		t.Errorf("template with a space: problems = %q, want [%q]", got, want)
+	}
+
+	tests := []struct {
+		name, src string
+		want      []string
+	}{
+		{"status after date", strings.Replace(event2027, "\nsport", "\n status: tentative\nsport", 1), []string{msg(3, "status")}},
+		{"space and tab", event2027 + " end_date: 2027-02-28\n\tentry: elite\n", []string{msg(9, "end_date"), msg(10, "entry")}},
+		{"other syntax error", "name: Vuelta Ciclista: Etapa 1\n", nil},
+		{"indented comment is not a field", event2027 + "  # name: x\nname: [a\n", nil},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := problems2027(tt.src)
+			if tt.want == nil {
+				if len(got) != 1 || !strings.Contains(got[0], "invalid YAML") {
+					t.Fatalf("problems = %q, want the invalid YAML message", got)
+				}
+				return
+			}
+			if !slices.Equal(got, tt.want) {
+				t.Fatalf("problems = %q, want %q", got, tt.want)
+			}
+			for _, g := range got {
+				if strings.Contains(g, `": "`) {
+					t.Errorf("message mentions the colon hint: %q", g)
+				}
+			}
+		})
+	}
+
+	t.Run("usual indentation is fine", func(t *testing.T) {
+		if got := problems(validEvent); len(got) != 0 {
+			t.Errorf("reported problems: %v", got)
+		}
+	})
 }

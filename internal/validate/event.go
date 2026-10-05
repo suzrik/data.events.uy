@@ -69,8 +69,11 @@ type links struct {
 }
 
 var (
-	langKey   = regexp.MustCompile(`^[a-z]{2}$`)
-	goTypeRef = regexp.MustCompile(` in type \S+`)
+	langKey = regexp.MustCompile(`^[a-z]{2}$`)
+	// indentedField matches a line where a top-level field name is preceded
+	// only by spaces or tabs; those names are never valid when indented.
+	indentedField = regexp.MustCompile(`^[ \t]+(name|date|end_date|status|entry|sport|city|venue|distances|links|description):`)
+	goTypeRef     = regexp.MustCompile(` in type \S+`)
 )
 
 // Messages for fields whose value has the wrong shape.
@@ -83,6 +86,9 @@ const (
 	msgNotAMapping  = `the file must be a set of "field: value" lines, as in templates/event.yaml`
 	msgDuplicateKey = "appears more than once; keep only one"
 )
+
+// shortValueFields cannot hold free text, so a trailing comment is a note to move.
+var shortValueFields = []string{"date", "end_date", "status", "entry", "sport"}
 
 var eventFields = []string{"name", "date", "end_date", "status", "entry", "sport", "city", "venue", "distances", "links", "description"}
 var linkFields = []string{"site", "instagram", "facebook", "register"}
@@ -101,6 +107,10 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 	if err := dec.Decode(&doc); err != nil {
 		if errors.Is(err, io.EOF) {
 			add("", "file is empty")
+		} else if lines := indentedFieldLines(src); len(lines) > 0 {
+			for _, l := range lines {
+				add("", "line %d: %q must start at the beginning of the line; remove the space before it", l.n, l.field)
+			}
 		} else {
 			add("", "%s", cleanYAMLError(err))
 		}
@@ -123,7 +133,12 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 
 	// checkComment reports text that YAML drops after " #" on a value's line.
 	checkComment := func(field string, n *yaml.Node) {
-		if c := strings.TrimSpace(n.LineComment); c != "" {
+		c := strings.TrimSpace(n.LineComment)
+		switch {
+		case c == "":
+		case slices.Contains(shortValueFields, field):
+			add(field, `the text after " #" is ignored by YAML (%q); remove it, or put the note in the description`, c)
+		default:
 			add(field, `the text after " #" is ignored by YAML (%q); put the whole value in double quotes, or remove the comment`, c)
 		}
 	}
@@ -310,13 +325,17 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 	}
 
 	if e.Status != "" && !shapeBad["status"] && !slices.Contains(statuses, e.Status) {
-		add("status", "must be confirmed or tentative, got %q", e.Status)
+		msg := "must be confirmed or tentative, got %q"
+		if h := valueHint("status", e.Status); h != "" {
+			msg += "; " + h
+		}
+		add("status", msg, e.Status)
 	}
 
 	if e.Entry != "" && !shapeBad["entry"] && !slices.Contains(entries, e.Entry) {
 		msg := "must be one of " + strings.Join(entries, ", ") + ", got %q"
-		if e.Entry == "licence" {
-			msg += "; write it as license"
+		if h := valueHint("entry", e.Entry); h != "" {
+			msg += "; " + h
 		}
 		add("entry", msg, e.Entry)
 	}
@@ -412,6 +431,48 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 		}
 	}
 	return ps
+}
+
+// valueHint suggests a fix for a likely wrong status or entry value.
+func valueHint(field, value string) string {
+	v := strings.ToLower(strings.TrimSpace(value))
+	allowed := statuses
+	var hints = map[string]string{}
+	for _, w := range []string{"cancelled", "canceled", "cancelado", "cancelada", "suspendido", "suspendida"} {
+		hints[w] = "to cancel an event, delete its file in a pull request"
+	}
+	for _, w := range []string{"postponed", "postergado", "postergada", "pospuesto", "pospuesta", "aplazado", "aplazada"} {
+		hints[w] = "write the new date, or the new month with status: tentative"
+	}
+	if field == "entry" {
+		allowed = entries
+		hints = map[string]string{
+			"licence": "write it as license", "licencia": "write it as license",
+			"élite":   "write it as elite",
+			"abierto": "write it as open", "abierta": "write it as open",
+		}
+	}
+	if slices.Contains(allowed, v) {
+		return "write it in lowercase"
+	}
+	return hints[v]
+}
+
+type indentedLine struct {
+	n     int
+	field string
+}
+
+// indentedFieldLines finds the lines of src that start with spaces or tabs
+// followed by a top-level field name and a colon.
+func indentedFieldLines(src []byte) []indentedLine {
+	var out []indentedLine
+	for i, line := range strings.Split(string(src), "\n") {
+		if m := indentedField.FindStringSubmatch(line); m != nil {
+			out = append(out, indentedLine{i + 1, m[1]})
+		}
+	}
+	return out
 }
 
 // isBlankDocument reports whether a YAML document has no content at all,
