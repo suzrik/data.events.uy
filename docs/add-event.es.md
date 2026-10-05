@@ -29,7 +29,10 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 | Campo | Obligatorio | Qué poner | Ejemplo |
 |---|---|---|---|
 | `name` | sí | Nombre del evento, tal como lo publica el organizador. Hasta 120 caracteres. | `Corrida Rambla 10K` |
-| `date` | sí | Fecha en formato año-mes-día. | `2026-10-11` |
+| `date` | sí | Fecha en formato año-mes-día. Si el organizador solo anunció el mes, año-mes. En un evento de varios días, el primer día. | `2026-10-11` o `2027-04` |
+| `end_date` | no | Último día de un evento de varios días, en formato año-mes-día. Tiene que ser posterior a `date`, a lo sumo 31 días después, y `date` tiene que incluir el día. | `2026-10-12` |
+| `status` | no | `tentative` si el organizador todavía no confirmó la fecha. El otro valor, `confirmed`, se entiende si no escribís la línea. | `tentative` |
+| `entry` | no | Quién puede participar: `open`, `license` o `elite`. Sin esta línea, el evento se considera abierto. | `license` |
 | `sport` | sí | `bike` (ciclismo), `run` (running) o `roll` (patinaje). | `run` |
 | `city` | sí | Ciudad, escrita igual que en [cities.yaml](../cities.yaml). Si falta, agregala a esa lista en el mismo pull request. | `Montevideo` |
 | `venue` | no | Lugar de largada. Hasta 120 caracteres. | `Rambla de Pocitos` |
@@ -40,6 +43,42 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 | `links.register` | no | Página de inscripción. Tiene que empezar con `https://`. | `https://example.org/inscripcion` |
 | `description` | sí | Descripción breve, hasta 500 caracteres por idioma. Es obligatorio `es` o `en`; el otro idioma es opcional. | ver la plantilla |
 
+## Fechas y participación
+
+Las líneas `end_date`, `status` y `entry` son opcionales: si no las necesitás, no las pongas. En la plantilla vienen comentadas con `# `; para usar una, borrá esas dos primeras marcas.
+
+**Solo se anunció el mes.** Si el organizador todavía no dijo el día, escribí solo el año y el mes:
+
+```yaml
+date: 2027-04
+```
+
+Cuando el organizador anuncie el día, corregí la fecha con un pull request nuevo (ver «Corregir o cancelar un evento»).
+
+**El evento dura varios días.** En `date` va el primer día y en `end_date` el último (hasta 31 días después). Los dos llevan día, así que no se combina con una fecha de solo mes:
+
+```yaml
+date: 2026-10-10
+end_date: 2026-10-12
+```
+
+**El organizador todavía no confirmó la fecha.** Por ejemplo, si la tomaste de la edición del año pasado o de un anuncio preliminar, agregá `status: tentative`. En la descripción, aclará de dónde sale la fecha:
+
+```yaml
+date: 2027-04-18
+status: tentative
+```
+
+**Quién puede participar.** Con `entry` indicás el tipo de participación:
+
+- `open`: puede participar cualquiera que se inscriba. Es lo que se entiende si no escribís la línea.
+- `license`: hace falta una licencia, ser socio de un club u otro requisito.
+- `elite`: participan solo federados o profesionales; el público va a mirar.
+
+```yaml
+entry: license
+```
+
 ## Errores frecuentes
 
 - Un texto con dos puntos seguidos de un espacio (`: `) va entre comillas dobles: `name: "Vuelta Ciclista: Etapa 1"`.
@@ -47,6 +86,7 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 - Los enlaces son direcciones completas que empiezan con `https://`, no un usuario como `@corridarambla`.
 - La descripción lleva el idioma en una línea aparte, con sangría: `es: Texto en español.`
 - Las distancias van entre corchetes, separadas por comas: `[10K, 5K]`.
+- `entry` se escribe en inglés, con `s`: `license`, no `licence`.
 
 ## Reglas
 

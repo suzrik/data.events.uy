@@ -59,6 +59,17 @@ func TestTemplateIsAValidEvent(t *testing.T) {
 	}
 }
 
+// The template travels inside a GitHub new-file URL, so it must stay short.
+func TestTemplateFitsInAURL(t *testing.T) {
+	src, err := os.ReadFile(repoRoot + "/templates/event.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(src) > 3000 {
+		t.Errorf("template is %d bytes; keep it at 3000 or fewer", len(src))
+	}
+}
+
 func TestGuidesDescribeEveryField(t *testing.T) {
 	for _, lang := range []string{"es", "en"} {
 		src, err := os.ReadFile(repoRoot + "/docs/add-event." + lang + ".md")
