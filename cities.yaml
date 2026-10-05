@@ -1,0 +1,25 @@
+# Ciudades permitidas en el campo "city" de un evento.
+# Allowed values for the "city" field of an event.
+#
+# Si falta una ciudad, agregala acá en el mismo pull request que el evento.
+# If a city is missing, add it here in the same pull request as the event.
+- Artigas
+- Canelones
+- Colonia del Sacramento
+- Durazno
+- Florida
+- Fray Bentos
+- Maldonado
+- Melo
+- Mercedes
+- Minas
+- Montevideo
+- Paysandú
+- Punta del Este
+- Rivera
+- Rocha
+- Salto
+- San José de Mayo
+- Tacuarembó
+- Treinta y Tres
+- Trinidad

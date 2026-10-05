@@ -1,0 +1,38 @@
+# Plantilla de evento / Event template
+# Guía / Guide: docs/add-event.es.md · docs/add-event.en.md
+#
+# Nombre del archivo / File name: events/<año>/<nombre-del-evento>.yaml
+# Solo minúsculas, números y guiones / Lowercase letters, digits and hyphens only.
+
+# Nombre del evento / Event name
+name: Corrida Rambla 10K
+
+# Fecha: año-mes-día / Date: year-month-day
+date: 2026-10-11
+
+# Deporte / Sport: bike | run | roll
+sport: run
+
+# Ciudad, igual que en cities.yaml / City, exactly as in cities.yaml
+city: Montevideo
+
+# Lugar de largada (opcional) / Start venue (optional)
+venue: Rambla de Pocitos
+
+# Distancias (opcional, hasta 6) / Distances (optional, up to 6)
+distances: [10K, 5K]
+
+# Enlaces oficiales del organizador, con https://. Al menos uno de site, instagram o facebook.
+# Official organizer links, with https://. At least one of site, instagram or facebook.
+links:
+  site: https://example.org
+  instagram: https://instagram.com/example
+  facebook: https://facebook.com/example
+  # Inscripción (opcional) / Registration (optional)
+  register: https://example.org/inscripcion
+
+# Descripción breve. Obligatorio es o en; el otro es opcional.
+# Short description. Either es or en is required; the other is optional.
+description:
+  es: Recorrido plano por la Rambla de Pocitos a Punta Carretas.
+  en: Flat course along the Pocitos waterfront to Punta Carretas.
