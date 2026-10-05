@@ -1,0 +1,14 @@
+name: Brevet 200 km y Rando 130 km Minas
+date: 2026-10-24
+sport: bike
+city: Minas
+venue: Complejo Deportivo, Estadio y Plaza de Deportes Número 1
+distances: [200 km, 130 km]
+links:
+  site: https://rando.uy/minas/
+  instagram: https://www.instagram.com/randonneurs.uy/
+  facebook: https://www.facebook.com/randonneurs.uy
+  register: https://rando.uy/inscripciones/
+description:
+  es: Brevet de 200 km y Rando de 130 km de Randonneurs Uruguay, con salida y llegada en Minas. Son paseos no competitivos con tiempo límite (13 h 30 min para el brevet de 200 km), a elegir en versión ruta o gravel/MTB. Pasan por lugares como Salto del Penitente y Villa Serrana.
+  en: A 200 km brevet and a 130 km rando by Randonneurs Uruguay, starting and finishing in Minas. These are non-competitive rides with a time limit (13 h 30 min for the 200 km brevet), available on a road or gravel/MTB route. They pass places such as Salto del Penitente and Villa Serrana.
