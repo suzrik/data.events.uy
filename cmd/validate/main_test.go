@@ -61,3 +61,33 @@ func TestRunInvalidCatalog(t *testing.T) {
 		t.Errorf("stdout = %q, want empty", stdout.String())
 	}
 }
+
+func TestRunWrongDirectory(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	dir := filepath.Join(t.TempDir(), "nope")
+	if code := run(dir, &stdout, &stderr); code != 2 {
+		t.Fatalf("code = %d, want 2", code)
+	}
+	if want := "validate: catalog directory \"" + dir + "\" not found\n"; stderr.String() != want {
+		t.Errorf("stderr = %q, want %q", stderr.String(), want)
+	}
+}
+
+func TestRunArgsOptionIsUsageError(t *testing.T) {
+	for _, arg := range []string{"--help", "-h", "-x"} {
+		var stdout, stderr bytes.Buffer
+		if code := runArgs([]string{arg}, &stdout, &stderr); code != 2 {
+			t.Errorf("%s: code = %d, want 2", arg, code)
+		}
+		if got := stderr.String(); got != "usage: validate [catalog directory]\n" {
+			t.Errorf("%s: stderr = %q", arg, got)
+		}
+		if stdout.Len() != 0 {
+			t.Errorf("%s: stdout = %q", arg, stdout.String())
+		}
+	}
+	var stdout, stderr bytes.Buffer
+	if code := runArgs([]string{catalog(t, event)}, &stdout, &stderr); code != 0 {
+		t.Errorf("directory argument: code = %d, stderr = %q", code, stderr.String())
+	}
+}

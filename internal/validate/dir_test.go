@@ -130,3 +130,96 @@ func TestDirMissingCitiesFile(t *testing.T) {
 		t.Fatalf("problems: %v", lines)
 	}
 }
+
+func TestDirCitiesFileEmptyEntriesInEverySpelling(t *testing.T) {
+	_, lines := report(t, map[string]string{"cities.yaml": "- Montevideo\n-\n- Salto\n- Montevideo\n- ~\n- null\n- \"\"\n"})
+	want := []string{
+		"cities.yaml: [1]: must not be empty",
+		`cities.yaml: [3]: "Montevideo" is listed twice`,
+		"cities.yaml: [4]: must not be empty",
+		"cities.yaml: [5]: must not be empty",
+		"cities.yaml: [6]: must not be empty",
+	}
+	if strings.Join(lines, "\n") != strings.Join(want, "\n") {
+		t.Fatalf("problems:\n%s\nwant:\n%s", strings.Join(lines, "\n"), strings.Join(want, "\n"))
+	}
+}
+
+func TestDirNoCityNoiseWhenCitiesUnavailable(t *testing.T) {
+	ev := strings.Replace(validEvent, "city: Montevideo", "city: Atlantida", 1)
+	for name, cities := range map[string]string{"missing": "", "not a list": "Montevideo: yes\n"} {
+		t.Run(name, func(t *testing.T) {
+			files := map[string]string{"events/2026/a.yaml": ev}
+			if cities != "" {
+				files["cities.yaml"] = cities
+			}
+			_, lines := report(t, files)
+			if len(lines) != 1 || !strings.HasPrefix(lines[0], "cities.yaml: ") {
+				t.Fatalf("problems: %v", lines)
+			}
+		})
+	}
+	// A list that loaded, even with a duplicate, still applies the rule.
+	_, lines := report(t, map[string]string{"cities.yaml": "- Salto\n- Salto\n", "events/2026/a.yaml": ev})
+	if len(lines) != 2 || !strings.Contains(lines[1], `city: "Atlantida" is not in cities.yaml`) {
+		t.Fatalf("problems: %v", lines)
+	}
+}
+
+func TestDirCitiesFileThatCannotBeRead(t *testing.T) {
+	root := tree(t, map[string]string{"events/.gitkeep": ""})
+	if err := os.Mkdir(filepath.Join(root, "cities.yaml"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Dir(root); err == nil {
+		t.Fatal("Dir returned no error for a cities.yaml that is a directory")
+	}
+}
+
+func TestDirSymbolicLinksAreReportedAndNeverRead(t *testing.T) {
+	outside := tree(t, map[string]string{"secret.yaml": "name: LEAKED-CONTENT\nnmae: LEAKED-KEY\n", "dir/inner.yaml": "name: LEAKED-DIR\n"})
+	root := tree(t, map[string]string{"cities.yaml": citiesFile, "events/2026/ok.yaml": validEvent})
+	links := map[string]string{
+		"events/2026/enlace.yaml": filepath.Join(outside, "secret.yaml"),
+		"events/2026/carpeta":     filepath.Join(outside, "dir"),
+		"events/2026/roto.yaml":   filepath.Join(outside, "missing.yaml"),
+	}
+	for name, target := range links {
+		if err := os.Symlink(target, filepath.Join(root, filepath.FromSlash(name))); err != nil {
+			t.Skipf("symlinks not supported: %v", err)
+		}
+	}
+	rep, err := Dir(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var lines []string
+	for _, p := range rep.Problems {
+		lines = append(lines, p.String())
+	}
+	want := []string{
+		"events/2026/carpeta: must be a regular file, not a symbolic link",
+		"events/2026/enlace.yaml: must be a regular file, not a symbolic link",
+		"events/2026/roto.yaml: must be a regular file, not a symbolic link",
+	}
+	if strings.Join(lines, "\n") != strings.Join(want, "\n") {
+		t.Fatalf("problems:\n%s", strings.Join(lines, "\n"))
+	}
+	if strings.Contains(strings.Join(lines, "\n"), "LEAKED") {
+		t.Error("content of a linked file appeared in the output")
+	}
+	if rep.Events != 1 {
+		t.Errorf("Events = %d, want 1", rep.Events)
+	}
+}
+
+func TestDirWrongDirectory(t *testing.T) {
+	root := tree(t, map[string]string{"file.txt": "x"})
+	for _, dir := range []string{filepath.Join(root, "nope"), filepath.Join(root, "file.txt")} {
+		_, err := Dir(dir)
+		want := `catalog directory "` + dir + `" not found`
+		if err == nil || err.Error() != want {
+			t.Errorf("Dir(%q) error = %v, want %q", dir, err, want)
+		}
+	}
+}

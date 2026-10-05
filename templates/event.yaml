@@ -3,6 +3,10 @@
 #
 # Nombre del archivo / File name: events/<año>/<nombre-del-evento>.yaml
 # Solo minúsculas, números y guiones / Lowercase letters, digits and hyphens only.
+#
+# Si un texto contiene ": " o " #", o empieza con "@", escribilo entre comillas dobles: name: "Vuelta Ciclista: Etapa 1"
+# If a text contains ": " or " #", or starts with "@", put it in double quotes: name: "Vuelta Ciclista: Etapa 1"
+# Borrá las líneas opcionales que no uses. / Delete the optional lines you do not use.
 
 # Nombre del evento / Event name
 name: Corrida Rambla 10K

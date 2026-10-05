@@ -43,9 +43,9 @@ func TestTemplateIsAValidEvent(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cities, ps := loadCities(os.DirFS(repoRoot))
-	if len(ps) != 0 {
-		t.Fatalf("cities.yaml: %v", ps)
+	cities, ps, err := loadCities(os.DirFS(repoRoot))
+	if err != nil || len(ps) != 0 {
+		t.Fatalf("cities.yaml: %v %v", ps, err)
 	}
 	// The template's example date is in 2026.
 	for _, p := range Event("templates/event.yaml", src, "2026", cities) {

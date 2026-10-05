@@ -9,9 +9,9 @@ events.uy is an open calendar of sports events in Uruguay. Anyone can propose an
 
 ## From the browser, nothing to install
 
-1. Open the new-event form. On events.uy, use the **Create event on GitHub** button at the top of this page: it opens the form with the template already filled in. On GitHub, open the `events/` folder, then the folder for the event's year, choose **Add file → Create new file** and copy the contents of the [template](../templates/event.yaml).
-2. Name the file: the event name in lowercase, without accents or spaces, with hyphens, ending in `.yaml`. Example: `corrida-rambla-10k.yaml`.
-3. Fill in the fields. The table below explains each one.
+1. Open the new-event form. On events.uy, use the **Create event on GitHub** button at the top of this page: it opens the form with the template already filled in. On GitHub, open the `events/` folder, choose **Add file → Create new file** and copy the contents of the [template](../templates/event.yaml).
+2. Name the file: the year of the event, a slash, and the event name in lowercase, without accents or spaces, with hyphens, ending in `.yaml`. Example: `2026/corrida-rambla-10k.yaml`. When you type the slash, GitHub creates the year folder if it does not exist yet. The year of the folder must be the year of the event's date.
+3. Fill in the fields and delete the optional lines you do not use. The table below explains each field.
 4. Click **Commit changes…** and then **Propose changes**.
 5. On the next screen, click **Create pull request**.
 
@@ -33,12 +33,20 @@ That's it. An automatic check reviews the format within a couple of minutes. If 
 | `sport` | yes | `bike` (cycling), `run` (running) or `roll` (skating). | `run` |
 | `city` | yes | City, spelled exactly as in [cities.yaml](../cities.yaml). If it is missing, add it to that list in the same pull request. | `Montevideo` |
 | `venue` | no | Start venue. Up to 120 characters. | `Rambla de Pocitos` |
-| `distances` | no | Up to 6 distances, in square brackets, separated by commas. | `[10K, 5K]` |
+| `distances` | no | Up to 6 distances of up to 20 characters each, in square brackets, separated by commas. | `[10K, 5K]` |
 | `links.site` | one of the three | Official organizer website. Must start with `https://`. | `https://example.org` |
-| `links.instagram` | one of the three | Official organizer Instagram. | `https://instagram.com/example` |
-| `links.facebook` | one of the three | Official organizer Facebook. | `https://facebook.com/example` |
-| `links.register` | no | Registration page. | `https://example.org/inscripcion` |
+| `links.instagram` | one of the three | Official organizer Instagram. Must start with `https://`. | `https://instagram.com/example` |
+| `links.facebook` | one of the three | Official organizer Facebook. Must start with `https://`. | `https://facebook.com/example` |
+| `links.register` | no | Registration page. Must start with `https://`. | `https://example.org/inscripcion` |
 | `description` | yes | Short description, up to 500 characters per language. Either `es` or `en` is required; the other language is optional. | see the template |
+
+## Common mistakes
+
+- Text with a colon followed by a space (`: `) goes in double quotes: `name: "Vuelta Ciclista: Etapa 1"`.
+- Text with ` #` goes in double quotes too: `name: "Fecha #3 Campeonato Nacional"`. Without quotes, everything after the `#` is lost.
+- Links are full addresses that start with `https://`, not a handle such as `@corridarambla`.
+- The description has the language on its own indented line: `es: Texto en español.`
+- Distances go in square brackets, separated by commas: `[10K, 5K]`.
 
 ## Rules
 
@@ -55,4 +63,4 @@ That's it. An automatic check reviews the format within a couple of minutes. If 
 
 ## Fixing or cancelling an event
 
-Open the event file on GitHub, click the pencil, change what is needed and send a pull request. If the event was cancelled, send a pull request that deletes the file.
+Open the event file on GitHub and click the pencil. If GitHub asks, click **Fork this repository**. Change what is needed and send a pull request. If the event was cancelled, send a pull request that deletes the file.

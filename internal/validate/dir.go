@@ -26,12 +26,20 @@ var eventPath = regexp.MustCompile(`^events/(\d{4})/([a-z0-9]+(?:-[a-z0-9]+)*)\.
 // events/. The error is non-nil only when the file system cannot be read.
 func Dir(root string) (Report, error) {
 	var rep Report
+	if info, err := os.Stat(root); err != nil && !errors.Is(err, fs.ErrNotExist) {
+		return rep, err
+	} else if err != nil || !info.IsDir() {
+		return rep, fmt.Errorf("catalog directory %q not found", root)
+	}
 	fsys := os.DirFS(root)
 
-	cities, ps := loadCities(fsys)
+	cities, ps, err := loadCities(fsys)
+	if err != nil {
+		return rep, err
+	}
 	rep.Problems = append(rep.Problems, ps...)
 
-	err := fs.WalkDir(fsys, "events", func(p string, d fs.DirEntry, err error) error {
+	err = fs.WalkDir(fsys, "events", func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
 			if p == "events" && errors.Is(err, fs.ErrNotExist) {
 				return nil // a catalog without events is valid
@@ -44,7 +52,15 @@ func Dir(root string) (Report, error) {
 			}
 			return nil
 		}
+		if d.Type()&fs.ModeSymlink != 0 {
+			rep.Problems = append(rep.Problems, Problem{Path: p, Msg: "must be a regular file, not a symbolic link"})
+			return nil
+		}
 		if d.IsDir() {
+			return nil
+		}
+		if !d.Type().IsRegular() {
+			rep.Problems = append(rep.Problems, Problem{Path: p, Msg: "must be a regular file"})
 			return nil
 		}
 		m := eventPath.FindStringSubmatch(p)
@@ -65,20 +81,44 @@ func Dir(root string) (Report, error) {
 	return rep, err
 }
 
-func loadCities(fsys fs.FS) (map[string]bool, []Problem) {
+// loadCities reads cities.yaml. The returned set is nil when the list is
+// unavailable (missing or not a valid list), so that events are not also
+// reported for cities that cannot be checked. The error is non-nil only
+// when the file exists but cannot be read.
+func loadCities(fsys fs.FS) (map[string]bool, []Problem, error) {
 	const path = "cities.yaml"
-	set := map[string]bool{}
 	src, err := fs.ReadFile(fsys, path)
-	if err != nil {
-		return set, []Problem{{Path: path, Msg: "file is missing"}}
+	if errors.Is(err, fs.ErrNotExist) {
+		return nil, []Problem{{Path: path, Msg: "file is missing"}}, nil
 	}
-	var list []string
-	if err := yaml.Unmarshal(src, &list); err != nil {
-		return set, []Problem{{Path: path, Msg: cleanYAMLError(err)}}
+	if err != nil {
+		return nil, nil, err
+	}
+	var doc yaml.Node
+	if err := yaml.Unmarshal(src, &doc); err != nil {
+		return nil, []Problem{{Path: path, Msg: cleanYAMLError(err)}}, nil
+	}
+	set := map[string]bool{}
+	if len(doc.Content) == 0 {
+		return set, nil, nil // an empty file is an empty list
+	}
+	root := doc.Content[0]
+	if root.Kind != yaml.SequenceNode {
+		// Let the decoder describe what is wrong with the shape.
+		var list []string
+		if err := yaml.Unmarshal(src, &list); err != nil {
+			return nil, []Problem{{Path: path, Msg: cleanYAMLError(err)}}, nil
+		}
+		return set, nil, nil // an empty document such as "~"
 	}
 	var ps []Problem
-	for i, c := range list {
+	for i, item := range root.Content {
 		field := fmt.Sprintf("[%d]", i)
+		var c string
+		if item.Kind != yaml.ScalarNode || item.Decode(&c) != nil {
+			ps = append(ps, Problem{Path: path, Field: field, Msg: "must be a city name"})
+			continue
+		}
 		switch {
 		case strings.TrimSpace(c) == "":
 			ps = append(ps, Problem{Path: path, Field: field, Msg: "must not be empty"})
@@ -90,5 +130,5 @@ func loadCities(fsys fs.FS) (map[string]bool, []Problem) {
 		}
 		set[c] = true
 	}
-	return set, ps
+	return set, ps, nil
 }

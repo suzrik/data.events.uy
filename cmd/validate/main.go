@@ -7,16 +7,26 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"events.uy/data/internal/validate"
 )
 
 func main() {
+	os.Exit(runArgs(os.Args[1:], os.Stdout, os.Stderr))
+}
+
+// runArgs interprets the command line: at most one argument, a directory.
+func runArgs(args []string, stdout, stderr io.Writer) int {
 	root := "."
-	if len(os.Args) > 1 {
-		root = os.Args[1]
+	if len(args) > 0 {
+		if strings.HasPrefix(args[0], "-") {
+			fmt.Fprintln(stderr, "usage: validate [catalog directory]")
+			return 2
+		}
+		root = args[0]
 	}
-	os.Exit(run(root, os.Stdout, os.Stderr))
+	return run(root, stdout, stderr)
 }
 
 func run(root string, stdout, stderr io.Writer) int {
