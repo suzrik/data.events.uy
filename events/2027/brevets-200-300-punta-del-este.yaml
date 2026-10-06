@@ -1,7 +1,7 @@
 name: Brevets 200 y 300 km Punta del Este
 date: 2027-01-09
 end_date: 2027-01-10
-sport: bike
+sport: road
 city: Punta del Este
 distances: [200 km, 300 km]
 links:

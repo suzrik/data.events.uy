@@ -1,8 +1,8 @@
 # events.uy — datos abiertos / open data
 
-Calendario abierto de eventos deportivos de Uruguay: ciclismo, running y patinaje. Estos archivos alimentan [events.uy](https://events.uy).
+Calendario abierto de eventos deportivos de Uruguay: ciclismo, running, trail, triatlón y patinaje. Estos archivos alimentan [events.uy](https://events.uy).
 
-Open calendar of sports events in Uruguay: cycling, running and skating. These files feed [events.uy](https://events.uy).
+Open calendar of sports events in Uruguay: cycling, running, trail running, triathlon and skating. These files feed [events.uy](https://events.uy).
 
 ## Agregar un evento / Add an event
 

@@ -30,7 +30,8 @@ date: 2026-10-11
 #   elite: solo deportistas federados o profesionales; el público va a mirar / federated or professional athletes only; the public comes to watch
 #entry: open
 
-# Deporte / Sport: bike | run | roll | trail | tri (triatlón y duatlón / triathlon and duathlon)
+# Deporte / Sport: road | mtb | gravel | run | trail | tri (triatlón y duatlón / triathlon and duathlon) | roll
+# Ciclismo con dos disciplinas / Cycling with two disciplines: sport: [mtb, gravel]
 sport: run
 
 # Ciudad, igual que en cities.yaml / City, exactly as in cities.yaml

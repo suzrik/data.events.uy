@@ -1,6 +1,6 @@
 name: Brevet 200 km y Rando 130 km Minas
 date: 2026-10-24
-sport: bike
+sport: [road, gravel]
 city: Minas
 venue: Complejo Deportivo, Estadio y Plaza de Deportes Número 1
 distances: [200 km, 130 km]

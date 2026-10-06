@@ -82,7 +82,15 @@ func TestEventRules(t *testing.T) {
 		{"date wrong format", with("2026-10-11", "11/10/2026"), "date: must be a real date written as YYYY-MM-DD, or YYYY-MM when the day is not announced yet"},
 		{"date in another year", with("2026-10-11", "2027-01-10"), "date: year 2027 does not match the folder events/2026; move the file to events/2027/"},
 		{"sport missing", with("sport: run\n", ""), "sport: is required"},
-		{"sport unknown", with("sport: run", "sport: swim"), `sport: must be one of bike, run, roll, trail, tri, got "swim"`},
+		{"sport unknown", with("sport: run", "sport: swim"), `sport: must be one of road, mtb, gravel, run, roll, trail, tri, got "swim"`},
+		{"sport is the old bike", with("sport: run", "sport: bike"), `sport: must be one of road, mtb, gravel, run, roll, trail, tri, got "bike"; cycling is now road, mtb or gravel`},
+		{"sport list with an unknown value", with("sport: run", "sport: [mtb, swim]"), `sport: must be one of road, mtb, gravel, run, roll, trail, tri, got "swim"`},
+		{"sport list mixes sports", with("sport: run", "sport: [run, trail]"), "sport: only the cycling disciplines road, mtb and gravel can be combined, got run, trail"},
+		{"sport list mixes cycling and running", with("sport: run", "sport: [mtb, trail]"), "sport: only the cycling disciplines road, mtb and gravel can be combined, got mtb, trail"},
+		{"sport list repeats a value", with("sport: run", "sport: [mtb, gravel, mtb]"), `sport: "mtb" appears more than once`},
+		{"sport list empty", with("sport: run", "sport: []"), "sport: is required"},
+		{"sport as nested lines", with("sport: run", "sport:\n  kind: run"), "sport: must be one value, or a list of cycling disciplines in square brackets, for example [mtb, gravel]"},
+		{"sport list item as list", with("sport: run", "sport: [mtb, [gravel]]"), "sport[1]: must be a single value"},
 		{"city missing", with("city: Montevideo\n", ""), "city: is required"},
 		{"city not listed", with("city: Montevideo", "city: Atlantida"), `city: "Atlantida" is not in cities.yaml`},
 		{"venue too long", with("venue: Rambla de Pocitos", "venue: "+strings.Repeat("a", 121)), "venue: must be at most 120 characters, got 121"},
@@ -114,9 +122,18 @@ func TestEventRules(t *testing.T) {
 }
 
 func TestEventAcceptsEverySport(t *testing.T) {
-	for _, sport := range []string{"bike", "run", "roll", "trail", "tri"} {
+	for _, sport := range []string{"road", "mtb", "gravel", "run", "roll", "trail", "tri"} {
 		if got := problems(with("sport: run", "sport: "+sport)); len(got) != 0 {
 			t.Errorf("sport %q: want no problems, got %v", sport, got)
+		}
+	}
+}
+
+// A race with an MTB course and a gravel course belongs to both disciplines.
+func TestEventAcceptsCombinedCyclingDisciplines(t *testing.T) {
+	for _, sport := range []string{"[mtb, gravel]", "[road, gravel]", "[road, mtb, gravel]", "[mtb]", "[run]"} {
+		if got := problems(with("sport: run", "sport: "+sport)); len(got) != 0 {
+			t.Errorf("sport %s: want no problems, got %v", sport, got)
 		}
 	}
 }
@@ -166,6 +183,8 @@ func TestEventInlineComments(t *testing.T) {
 			`events/2026/x.yaml: name: the text after " #" is ignored by YAML ("#3 Campeonato Nacional"); put the whole value in double quotes, or remove the comment`},
 		{"description", with("  es: Recorrido plano por la Rambla.", "  es: Recorrido plano. #MVD10K #running"),
 			`events/2026/x.yaml: description.es: the text after " #" is ignored by YAML ("#MVD10K #running"); put the whole value in double quotes, or remove the comment`},
+		{"sport list", with("sport: run", "sport: [mtb, gravel] # dos"),
+			`events/2026/x.yaml: sport: the text after " #" is ignored by YAML ("# dos")`},
 		{"sport", with("sport: run", "sport: run # running"),
 			`events/2026/x.yaml: sport: the text after " #" is ignored by YAML ("# running")`},
 		{"link", with("site: https://example.org", "site: https://example.org # oficial"),
@@ -320,7 +339,7 @@ func TestEventCitiesUnavailable(t *testing.T) {
 
 const event2027 = `name: Vuelta de Prueba
 date: 2027-02-25
-sport: bike
+sport: road
 city: Montevideo
 links:
   site: https://example.org

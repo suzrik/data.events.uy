@@ -51,7 +51,7 @@ func TestRunInvalidCatalog(t *testing.T) {
 		t.Fatalf("code = %d, want 1", code)
 	}
 	got := stderr.String()
-	if !strings.Contains(got, "events/2026/corrida.yaml: sport: must be one of bike, run, roll") {
+	if !strings.Contains(got, "events/2026/corrida.yaml: sport: must be one of road, mtb, gravel, run, roll") {
 		t.Errorf("stderr lacks the problem line: %q", got)
 	}
 	if !strings.Contains(got, "1 problem(s) found in 1 event file(s) checked") {

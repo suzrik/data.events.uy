@@ -33,7 +33,7 @@ That's it. An automatic check reviews the format within a couple of minutes. If 
 | `end_date` | no | Last day of a multi-day event, as year-month-day. Must be after `date`, at most 31 days later, and `date` must include the day. | `2026-10-12` |
 | `status` | no | `tentative` if the organizer has not confirmed the date yet. The other value, `confirmed`, is assumed if you leave the line out. | `tentative` |
 | `entry` | no | Who can take part: `open`, `license` or `elite`. Without this line, the event counts as open. | `license` |
-| `sport` | yes | `bike` (cycling), `run` (road running), `roll` (skating), `trail` (trail running) or `tri` (triathlon and duathlon). | `run` |
+| `sport` | yes | `road` (road cycling), `mtb` (mountain bike), `gravel`, `run` (road running), `trail` (trail running), `tri` (triathlon and duathlon) or `roll` (skating). If a cycling race has two disciplines, put both in square brackets. | `run` or `[mtb, gravel]` |
 | `city` | yes | City, spelled exactly as in [cities.yaml](../cities.yaml). If it is missing, add it to that list in the same pull request. | `Montevideo` |
 | `venue` | no | Start venue. Up to 120 characters. | `Rambla de Pocitos` |
 | `distances` | no | Up to 6 distances of up to 20 characters each, in square brackets, separated by commas. | `[10K, 5K]` |
@@ -69,6 +69,12 @@ date: 2027-04-18
 status: tentative
 ```
 
+**The race has MTB and gravel.** The three cycling disciplines, `road`, `mtb` and `gravel`, can be combined: if the event has a course or a category of each, put both in square brackets and it shows under both filters. Every other sport is written alone.
+
+```yaml
+sport: [mtb, gravel]
+```
+
 **Who can take part.** `entry` says what kind of participation the event has:
 
 - `open`: anyone who registers can take part. This is assumed if you do not write the line.
@@ -93,6 +99,7 @@ status: tentative
 - Links are full addresses that start with `https://`, not a handle such as `@corridarambla`.
 - The description has the language on its own indented line: `es: Texto en español.`
 - Distances go in square brackets, separated by commas: `[10K, 5K]`.
+- `sport: bike` no longer exists: cycling is written as `road`, `mtb` or `gravel`.
 - `entry` uses the American spelling: `license`, not `licence`.
 
 ## Rules

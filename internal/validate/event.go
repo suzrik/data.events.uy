@@ -42,7 +42,10 @@ const (
 )
 
 var (
-	sports   = []string{"bike", "run", "roll", "trail", "tri"}
+	sports = []string{"road", "mtb", "gravel", "run", "roll", "trail", "tri"}
+	// cycling lists the sports one event can combine: a race with an MTB
+	// course and a gravel course belongs to both.
+	cycling  = []string{"road", "mtb", "gravel"}
 	statuses = []string{"confirmed", "tentative"}
 	entries  = []string{"open", "license", "elite"}
 )
@@ -53,7 +56,7 @@ type event struct {
 	EndDate     string            `yaml:"end_date"`
 	Status      string            `yaml:"status"`
 	Entry       string            `yaml:"entry"`
-	Sport       string            `yaml:"sport"`
+	Sport       []string          `yaml:"sport"`
 	City        string            `yaml:"city"`
 	Venue       string            `yaml:"venue"`
 	Distances   []string          `yaml:"distances"`
@@ -80,6 +83,7 @@ var (
 const (
 	msgSingleValue  = "must be a single value on one line, not a list or nested lines"
 	msgDistances    = "must be a list in square brackets, for example [10K, 5K]"
+	msgSport        = "must be one value, or a list of cycling disciplines in square brackets, for example [mtb, gravel]"
 	msgDescription  = `must list the languages on separate indented lines, for example "es: ..."`
 	msgLinks        = `must list the links on separate indented lines, for example "site: https://..."`
 	msgSecondDoc    = `the file must contain one YAML document; remove the "---" line and everything after it`
@@ -192,7 +196,26 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 		case "entry":
 			shapeBad[key] = !scalar(key, val, &e.Entry)
 		case "sport":
-			shapeBad[key] = !scalar(key, val, &e.Sport)
+			switch val.Kind {
+			case yaml.SequenceNode:
+				checkComment(key, val)
+				for j, item := range val.Content {
+					var s string
+					if !scalar(fmt.Sprintf("sport[%d]", j), item, &s) {
+						shapeBad[key] = true
+					}
+					e.Sport = append(e.Sport, s)
+				}
+			case yaml.MappingNode:
+				add(key, "%s", msgSport)
+				shapeBad[key] = true
+			default:
+				var s string
+				shapeBad[key] = !scalar(key, val, &s)
+				if s != "" {
+					e.Sport = []string{s}
+				}
+			}
 		case "city":
 			shapeBad[key] = !scalar(key, val, &e.City)
 		case "venue":
@@ -341,11 +364,27 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 	}
 
 	if !shapeBad["sport"] {
-		switch {
-		case e.Sport == "":
+		if len(e.Sport) == 0 {
 			add("sport", "is required")
-		case !slices.Contains(sports, e.Sport):
-			add("sport", "must be one of %s, got %q", strings.Join(sports, ", "), e.Sport)
+		}
+		known, listed := true, map[string]bool{}
+		for _, s := range e.Sport {
+			switch {
+			case !slices.Contains(sports, s):
+				msg := "must be one of %s, got %q"
+				if s == "bike" {
+					msg += "; cycling is now road, mtb or gravel"
+				}
+				add("sport", msg, strings.Join(sports, ", "), s)
+				known = false
+			case listed[s]:
+				add("sport", "%q appears more than once", s)
+				known = false
+			}
+			listed[s] = true
+		}
+		if known && len(e.Sport) > 1 && slices.ContainsFunc(e.Sport, func(s string) bool { return !slices.Contains(cycling, s) }) {
+			add("sport", "only the cycling disciplines road, mtb and gravel can be combined, got %s", strings.Join(e.Sport, ", "))
 		}
 	}
 

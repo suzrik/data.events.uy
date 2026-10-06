@@ -1,6 +1,6 @@
 name: Vuelta la Lucha
 date: 2026-10-11
-sport: bike
+sport: [mtb, gravel]
 city: Paysandú
 venue: Asociación Rural
 distances: [82 km, 38 km]

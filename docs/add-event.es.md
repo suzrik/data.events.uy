@@ -33,7 +33,7 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 | `end_date` | no | Último día de un evento de varios días, en formato año-mes-día. Tiene que ser posterior a `date`, a lo sumo 31 días después, y `date` tiene que incluir el día. | `2026-10-12` |
 | `status` | no | `tentative` si el organizador todavía no confirmó la fecha. El otro valor, `confirmed`, se entiende si no escribís la línea. | `tentative` |
 | `entry` | no | Quién puede participar: `open`, `license` o `elite`. Sin esta línea, el evento se considera abierto. | `license` |
-| `sport` | sí | `bike` (ciclismo), `run` (running de calle), `roll` (patinaje), `trail` (trail running) o `tri` (triatlón y duatlón). | `run` |
+| `sport` | sí | `road` (ciclismo de ruta), `mtb` (mountain bike), `gravel`, `run` (running de calle), `trail` (trail running), `tri` (triatlón y duatlón) o `roll` (patinaje). Si una carrera de ciclismo tiene dos disciplinas, van las dos entre corchetes. | `run` o `[mtb, gravel]` |
 | `city` | sí | Ciudad, escrita igual que en [cities.yaml](../cities.yaml). Si falta, agregala a esa lista en el mismo pull request. | `Montevideo` |
 | `venue` | no | Lugar de largada. Hasta 120 caracteres. | `Rambla de Pocitos` |
 | `distances` | no | Hasta 6 distancias de hasta 20 caracteres cada una, entre corchetes y separadas por comas. | `[10K, 5K]` |
@@ -69,6 +69,12 @@ date: 2027-04-18
 status: tentative
 ```
 
+**La carrera tiene MTB y gravel.** Las tres disciplinas de ciclismo, `road`, `mtb` y `gravel`, se pueden combinar: si el evento tiene un recorrido o una categoría de cada una, escribí las dos entre corchetes y va a aparecer en los dos filtros. Los demás deportes van de a uno.
+
+```yaml
+sport: [mtb, gravel]
+```
+
 **Quién puede participar.** Con `entry` indicás el tipo de participación:
 
 - `open`: puede participar cualquiera que se inscriba. Es lo que se entiende si no escribís la línea.
@@ -93,6 +99,7 @@ status: tentative
 - Los enlaces son direcciones completas que empiezan con `https://`, no un usuario como `@corridarambla`.
 - La descripción lleva el idioma en una línea aparte, con sangría: `es: Texto en español.`
 - Las distancias van entre corchetes, separadas por comas: `[10K, 5K]`.
+- `sport: bike` ya no existe: el ciclismo se indica como `road`, `mtb` o `gravel`.
 - `entry` se escribe en inglés, con `s`: `license`, no `licence`.
 
 ## Reglas

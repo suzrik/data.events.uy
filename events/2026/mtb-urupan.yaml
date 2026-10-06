@@ -1,6 +1,6 @@
 name: MTB Urupan
 date: 2026-10-10
-sport: bike
+sport: [mtb, gravel]
 city: Pando
 venue: Club Urupan
 distances: [50 km, 30 km]

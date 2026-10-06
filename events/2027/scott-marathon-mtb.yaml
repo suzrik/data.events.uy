@@ -1,7 +1,7 @@
 name: Scott Marathon MTB
 date: 2027-03-12
 end_date: 2027-03-14
-sport: bike
+sport: [mtb, gravel]
 city: Minas
 venue: Parque de Minas – Hotel Vacacional
 distances: [186 km, 110 km, 60 km, 33 km]
