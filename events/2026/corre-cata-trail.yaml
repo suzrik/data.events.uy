@@ -3,7 +3,7 @@ date: 2026-10-18
 sport: trail
 city: Salto
 venue: Parque del Lago
-distances: [10 km, 5 km, 2,5 km]
+distances: [10 km, 5 km, "2,5 km"]
 links:
   site: https://encarrera.uy/corre-cata-2026/
   register: https://encarrera.uy/corre-cata-2026/
