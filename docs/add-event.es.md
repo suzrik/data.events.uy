@@ -102,6 +102,23 @@ status: tentative
 - `sport: bike` ya no existe: el ciclismo se indica como `road`, `mtb` o `gravel`.
 - `entry` se escribe en inglés, con `s`: `license`, no `licence`.
 
+## Salidas grupales
+
+Una salida grupal es una salida en bici o a correr que se repite: todos los sábados, los martes y jueves, el tercer domingo de cada mes. No tiene fecha, tiene días. Va en un archivo aparte, en la carpeta `rides/`, y aparece en la página «Salidas» del sitio, no en el calendario.
+
+1. Copiá la [plantilla de salida](../templates/ride.yaml) a `rides/<nombre-de-la-salida>.yaml`.
+2. Completá los campos. `name`, `sport`, `city`, `venue`, `links` y `description` son los mismos que en un evento. En lugar de `date` van estos:
+
+| Campo | Obligatorio | Qué poner | Ejemplo |
+|---|---|---|---|
+| `days` | sí | Los días en que sale, entre corchetes: `mon` (lunes), `tue` (martes), `wed` (miércoles), `thu` (jueves), `fri` (viernes), `sat` (sábado), `sun` (domingo). | `[tue, thu]` |
+| `week` | no | Solo si sale una vez por mes: `1`, `2`, `3`, `4` o `last`. Con `days: [sun]` y `week: 3` es el tercer domingo de cada mes. | `3` |
+| `time` | no | Hora de salida, en 24 horas y entre comillas. | `"18:45"` |
+
+3. Enviá un pull request, igual que con un evento.
+
+En la descripción contá lo que alguien necesita saber antes de ir: ritmo o nivel, distancia o recorridos habituales, si es gratis, si hay que avisar antes, qué llevar. Si la salida deja de hacerse, enviá un pull request que elimine el archivo.
+
 ## Reglas
 
 - Solo eventos con un enlace oficial del organizador.

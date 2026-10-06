@@ -84,6 +84,39 @@ func TestGuidesDescribeEveryField(t *testing.T) {
 	}
 }
 
+func TestRideTemplateIsAValidRide(t *testing.T) {
+	src, err := os.ReadFile(repoRoot + "/templates/ride.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cities, ps, err := loadCities(os.DirFS(repoRoot))
+	if err != nil || len(ps) != 0 {
+		t.Fatalf("cities.yaml: %v %v", ps, err)
+	}
+	for _, p := range Ride("templates/ride.yaml", src, cities) {
+		t.Error(p)
+	}
+	for _, name := range rideFields {
+		if !strings.Contains(string(src), name+":") {
+			t.Errorf("ride template has no %q", name+":")
+		}
+	}
+}
+
+func TestGuidesDescribeRides(t *testing.T) {
+	for _, lang := range []string{"es", "en"} {
+		src, err := os.ReadFile(repoRoot + "/docs/add-event." + lang + ".md")
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, want := range []string{"`rides/`", "templates/ride.yaml", "`days`", "`week`", "`time`"} {
+			if !strings.Contains(string(src), want) {
+				t.Errorf("add-event.%s.md does not mention %s", lang, want)
+			}
+		}
+	}
+}
+
 func TestLicensesArePresent(t *testing.T) {
 	for file, want := range map[string]string{
 		"LICENSE":      "Attribution 4.0 International",

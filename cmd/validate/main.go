@@ -39,9 +39,9 @@ func run(root string, stdout, stderr io.Writer) int {
 		fmt.Fprintln(stderr, p)
 	}
 	if n := len(rep.Problems); n > 0 {
-		fmt.Fprintf(stderr, "\n%d problem(s) found in %d event file(s) checked\n", n, rep.Events)
+		fmt.Fprintf(stderr, "\n%d problem(s) found in %d event file(s) and %d ride file(s) checked\n", n, rep.Events, rep.Rides)
 		return 1
 	}
-	fmt.Fprintf(stdout, "OK: %d event file(s) checked\n", rep.Events)
+	fmt.Fprintf(stdout, "OK: %d event file(s) and %d ride file(s) checked\n", rep.Events, rep.Rides)
 	return 0
 }

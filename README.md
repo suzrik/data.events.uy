@@ -14,8 +14,9 @@ Open calendar of sports events in Uruguay: cycling, running, trail running, tria
 | Ruta / Path | Contenido / Contents |
 |---|---|
 | `events/<año>/<evento>.yaml` | Un archivo por evento / One file per event |
+| `rides/<salida>.yaml` | Un archivo por salida grupal que se repite / One file per regular group ride |
 | `cities.yaml` | Ciudades permitidas / Allowed cities |
-| `templates/event.yaml` | Plantilla / Template |
+| `templates/event.yaml`, `templates/ride.yaml` | Plantillas / Templates |
 | `cmd/validate` | Verificador de formato / Format checker |
 
 ## Verificar / Validate

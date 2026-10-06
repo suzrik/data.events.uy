@@ -48,7 +48,18 @@ var (
 	cycling  = []string{"road", "mtb", "gravel"}
 	statuses = []string{"confirmed", "tentative"}
 	entries  = []string{"open", "license", "elite"}
+	weekdays = []string{"mon", "tue", "wed", "thu", "fri", "sat", "sun"}
+	weeks    = []string{"1", "2", "3", "4", "last"}
 )
+
+// dayHints maps the ways people write a day to the value the format takes.
+var dayHints = map[string]string{
+	"lunes": "mon", "martes": "tue", "miercoles": "wed", "miércoles": "wed", "jueves": "thu", "viernes": "fri", "sabado": "sat", "sábado": "sat", "domingo": "sun",
+	"lun": "mon", "mar": "tue", "mie": "wed", "mié": "wed", "jue": "thu", "vie": "fri", "sab": "sat", "sáb": "sat", "dom": "sun",
+	"monday": "mon", "tuesday": "tue", "wednesday": "wed", "thursday": "thu", "friday": "fri", "saturday": "sat", "sunday": "sun",
+}
+
+var clockTime = regexp.MustCompile(`^([01]\d|2[0-3]):[0-5]\d$`)
 
 type event struct {
 	Name        string            `yaml:"name"`
@@ -75,7 +86,7 @@ var (
 	langKey = regexp.MustCompile(`^[a-z]{2}$`)
 	// indentedField matches a line where a top-level field name is preceded
 	// only by spaces or tabs; those names are never valid when indented.
-	indentedField = regexp.MustCompile(`^[ \t]+(name|date|end_date|status|entry|sport|city|venue|distances|links|description):`)
+	indentedField = regexp.MustCompile(`^[ \t]+(name|date|end_date|status|entry|sport|city|venue|distances|days|week|time|links|description):`)
 	goTypeRef     = regexp.MustCompile(` in type \S+`)
 )
 
@@ -84,6 +95,7 @@ const (
 	msgSingleValue  = "must be a single value on one line, not a list or nested lines"
 	msgDistances    = "must be a list in square brackets, for example [10K, 5K]"
 	msgSport        = "must be one value, or a list of cycling disciplines in square brackets, for example [mtb, gravel]"
+	msgDays         = "must be a list in square brackets, for example [tue, thu]"
 	msgDescription  = `must list the languages on separate indented lines, for example "es: ..."`
 	msgLinks        = `must list the links on separate indented lines, for example "site: https://..."`
 	msgSecondDoc    = `the file must contain one YAML document; remove the "---" line and everything after it`
@@ -92,15 +104,43 @@ const (
 )
 
 // shortValueFields cannot hold free text, so a trailing comment is a note to move.
-var shortValueFields = []string{"date", "end_date", "status", "entry", "sport"}
+var shortValueFields = []string{"date", "end_date", "status", "entry", "sport", "days", "week", "time"}
 
 var eventFields = []string{"name", "date", "end_date", "status", "entry", "sport", "city", "venue", "distances", "links", "description"}
 var linkFields = []string{"site", "instagram", "facebook", "register"}
+
+// rideFields are the fields of a ride file: a regular group ride or run has
+// no date, it has the days of the week it runs on.
+var rideFields = []string{"name", "sport", "city", "venue", "days", "week", "time", "links", "description"}
+
+// kind tells the two file formats apart.
+type kind int
+
+const (
+	kindEvent kind = iota
+	kindRide
+)
 
 // Event checks the contents of one event file. year is the name of the
 // directory the file lives in; cities is the set read from cities.yaml, or
 // nil when that list is unavailable (the city-list rule is then skipped).
 func Event(path string, src []byte, year string, cities map[string]bool) []Problem {
+	return check(kindEvent, path, src, year, cities)
+}
+
+// Ride checks the contents of one ride file: a group ride or run that
+// repeats every week, or once a month. It shares name, sport, city, venue,
+// links and description with events; instead of a date it has days, and
+// optionally week and time.
+func Ride(path string, src []byte, cities map[string]bool) []Problem {
+	return check(kindRide, path, src, "", cities)
+}
+
+func check(k kind, path string, src []byte, year string, cities map[string]bool) []Problem {
+	fields := eventFields
+	if k == kindRide {
+		fields = rideFields
+	}
 	var ps []Problem
 	add := func(field, format string, args ...any) {
 		ps = append(ps, Problem{Path: path, Field: field, Msg: fmt.Sprintf(format, args...)})
@@ -170,12 +210,18 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 		descBad      = map[string]bool{}
 		distBad      = map[int]bool{}
 		shapeBad     = map[string]bool{} // scalar fields with a list or mapping value
+		days         []string
+		week, clock  string
 	)
 	for i := 0; i+1 < len(root.Content); i += 2 {
 		key, val := root.Content[i].Value, root.Content[i+1]
 		switch {
-		case !slices.Contains(eventFields, key):
-			add("", "unknown field %q", key)
+		case !slices.Contains(fields, key):
+			if k == kindRide && (key == "date" || key == "end_date") {
+				add("", "unknown field %q; a ride has no date: say when it runs with days", key)
+			} else {
+				add("", "unknown field %q", key)
+			}
 			continue
 		case seen[key]:
 			add(key, "%s", msgDuplicateKey)
@@ -216,6 +262,26 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 					e.Sport = []string{s}
 				}
 			}
+		case "days":
+			switch {
+			case isNull(val):
+			case val.Kind != yaml.SequenceNode:
+				add(key, "%s", msgDays)
+				shapeBad[key] = true
+			default:
+				checkComment(key, val)
+				for j, item := range val.Content {
+					var d string
+					if !scalar(fmt.Sprintf("days[%d]", j), item, &d) {
+						shapeBad[key] = true
+					}
+					days = append(days, d)
+				}
+			}
+		case "week":
+			shapeBad[key] = !scalar(key, val, &week)
+		case "time":
+			shapeBad[key] = !scalar(key, val, &clock)
 		case "city":
 			shapeBad[key] = !scalar(key, val, &e.City)
 		case "venue":
@@ -312,7 +378,7 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 		monthOnly  bool      // the date field is a real YYYY-MM
 		dateIsGood bool      // the date field is a real day or a real month
 	)
-	if !shapeBad["date"] {
+	if k == kindEvent && !shapeBad["date"] {
 		day, dayErr := time.Parse("2006-01-02", e.Date)
 		_, monthErr := time.Parse("2006-01", e.Date)
 		switch {
@@ -385,6 +451,42 @@ func Event(path string, src []byte, year string, cities map[string]bool) []Probl
 		}
 		if known && len(e.Sport) > 1 && slices.ContainsFunc(e.Sport, func(s string) bool { return !slices.Contains(cycling, s) }) {
 			add("sport", "only the cycling disciplines road, mtb and gravel can be combined, got %s", strings.Join(e.Sport, ", "))
+		}
+	}
+
+	if k == kindRide {
+		if !shapeBad["days"] {
+			if len(days) == 0 {
+				add("days", "is required")
+			}
+			listed := map[string]bool{}
+			for _, d := range days {
+				switch {
+				case !slices.Contains(weekdays, d):
+					msg := "must use mon, tue, wed, thu, fri, sat or sun, got %q"
+					low := strings.ToLower(strings.TrimSpace(d))
+					if h := dayHints[low]; h != "" {
+						msg += "; write it as " + h
+					} else if slices.Contains(weekdays, low) {
+						msg += "; write it as " + low
+					}
+					add("days", msg, d)
+				case listed[d]:
+					add("days", "%q appears more than once", d)
+				}
+				listed[d] = true
+			}
+		}
+		if week != "" && !shapeBad["week"] {
+			switch {
+			case !slices.Contains(weeks, week):
+				add("week", "must be 1, 2, 3, 4 or last, got %q", week)
+			case !shapeBad["days"] && len(days) > 1:
+				add("week", "needs exactly one day in days, for example days: [sun] with week: 3")
+			}
+		}
+		if clock != "" && !shapeBad["time"] && !clockTime.MatchString(clock) {
+			add("time", `must be written as HH:MM on a 24-hour clock, for example "18:45", got %q`, clock)
 		}
 	}
 

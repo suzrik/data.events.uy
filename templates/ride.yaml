@@ -1,0 +1,43 @@
+# Plantilla de salida grupal / Group ride template
+# Guía / Guide: docs/add-event.es.md · docs/add-event.en.md
+#
+# Para salidas que se repiten cada semana o cada mes. Una carrera con fecha va en events/.
+# For rides that repeat every week or every month. A race with a date goes in events/.
+#
+# Nombre del archivo / File name: rides/<nombre-de-la-salida>.yaml
+# Solo minúsculas, números y guiones / Lowercase letters, digits and hyphens only.
+
+# Nombre de la salida o del grupo / Name of the ride or of the group
+name: Salida de los Sábados
+
+# Deporte / Sport: road | mtb | gravel | run | trail | tri | roll
+sport: road
+
+# Ciudad del punto de encuentro, igual que en cities.yaml / Town of the meeting point, exactly as in cities.yaml
+city: Montevideo
+
+# Punto de encuentro (opcional) / Meeting point (optional)
+venue: Plaza Virgilio
+
+# Días / Days: mon | tue | wed | thu | fri | sat | sun
+days: [sat]
+
+# Solo si es una vez por mes: 1, 2, 3, 4 o last. Con days: [sun] y week: 3 es el tercer domingo.
+# Only if it runs once a month: 1, 2, 3, 4 or last. With days: [sun] and week: 3 it is the third Sunday.
+#week: 3
+
+# Hora de salida, 24 horas, entre comillas (opcional) / Start time, 24-hour clock, in quotes (optional)
+time: "07:30"
+
+# Enlaces oficiales de quien organiza, con https://. Al menos uno de site, instagram o facebook.
+# Official links of whoever runs it, with https://. At least one of site, instagram or facebook.
+links:
+  site: https://example.org
+  instagram: https://instagram.com/example
+  facebook: https://facebook.com/example
+
+# Descripción breve. Obligatorio es o en; el otro es opcional.
+# Short description. Either es or en is required; the other is optional.
+description:
+  es: Salida grupal por la rambla, a ritmo tranquilo. Abierta a quien quiera sumarse.
+  en: Group ride along the waterfront at an easy pace. Open to anyone who wants to join.

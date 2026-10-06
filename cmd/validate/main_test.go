@@ -39,7 +39,7 @@ func TestRunValidCatalog(t *testing.T) {
 	if code != 0 || stderr.Len() != 0 {
 		t.Fatalf("code = %d, stderr = %q", code, stderr.String())
 	}
-	if got := stdout.String(); got != "OK: 1 event file(s) checked\n" {
+	if got := stdout.String(); got != "OK: 1 event file(s) and 0 ride file(s) checked\n" {
 		t.Errorf("stdout = %q", got)
 	}
 }
@@ -54,7 +54,7 @@ func TestRunInvalidCatalog(t *testing.T) {
 	if !strings.Contains(got, "events/2026/corrida.yaml: sport: must be one of road, mtb, gravel, run, roll") {
 		t.Errorf("stderr lacks the problem line: %q", got)
 	}
-	if !strings.Contains(got, "1 problem(s) found in 1 event file(s) checked") {
+	if !strings.Contains(got, "1 problem(s) found in 1 event file(s) and 0 ride file(s) checked") {
 		t.Errorf("stderr lacks the summary: %q", got)
 	}
 	if stdout.Len() != 0 {

@@ -102,6 +102,23 @@ status: tentative
 - `sport: bike` no longer exists: cycling is written as `road`, `mtb` or `gravel`.
 - `entry` uses the American spelling: `license`, not `licence`.
 
+## Group rides
+
+A group ride is a ride or a run that repeats: every Saturday, on Tuesdays and Thursdays, on the third Sunday of each month. It has no date, it has days. It goes in a file of its own, in the `rides/` folder, and shows on the site's "Rides" page, not in the calendar.
+
+1. Copy the [ride template](../templates/ride.yaml) to `rides/<name-of-the-ride>.yaml`.
+2. Fill in the fields. `name`, `sport`, `city`, `venue`, `links` and `description` are the same as in an event. Instead of `date` it takes these:
+
+| Field | Required | What to write | Example |
+|---|---|---|---|
+| `days` | yes | The days it runs, in square brackets: `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`. | `[tue, thu]` |
+| `week` | no | Only if it runs once a month: `1`, `2`, `3`, `4` or `last`. With `days: [sun]` and `week: 3` it is the third Sunday of each month. | `3` |
+| `time` | no | Start time, on a 24-hour clock and in quotes. | `"18:45"` |
+
+3. Send a pull request, as with an event.
+
+In the description say what someone needs to know before going: pace or level, distance or usual routes, whether it is free, whether to give notice, what to bring. If the ride stops running, send a pull request that deletes the file.
+
 ## Rules
 
 - Only events with an official organizer link.
