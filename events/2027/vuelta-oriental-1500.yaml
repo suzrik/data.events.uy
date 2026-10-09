@@ -4,11 +4,11 @@ end_date: 2027-02-10
 sport: road
 city: Chuy
 venue: Marco da Fronteira
-distances: [1500 km]
+distances: [1500 km, 1000 km]
 links:
   site: https://rando.uy/vuelta1500/
   instagram: https://www.instagram.com/randonneurs.uy/
   facebook: https://www.facebook.com/randonneurs.uy
 description:
-  es: Vuelta a Uruguay de 1500 km en modalidad randonneur. Tiene un límite de 125 horas; el reglamento de Randonneurs Uruguay define sus brevets como salidas no competitivas. Larga el 5 de febrero a las 7:00 desde Chuy y la llegada límite es el 10 de febrero a las 12:00. Organiza Randonneurs Uruguay. El recorrido pasa por Rocha, Minas, Colonia del Sacramento, Mercedes, Trinidad y Florida. Incluye jersey y servicio de dropbag.
-  en: A 1,500 km loop of Uruguay in randonneur format. It has a 125-hour limit; the rules of Randonneurs Uruguay define its brevets as non-competitive rides. It starts on 5 February at 7:00 in Chuy, and the cut-off at the finish is 10 February at 12:00. Run by Randonneurs Uruguay. The route passes Rocha, Minas, Colonia del Sacramento, Mercedes, Trinidad and Florida. A jersey and a drop-bag service are included.
+  es: Vuelta a Uruguay de 1500 km en modalidad randonneur. Tiene un límite de 125 horas; el reglamento de Randonneurs Uruguay define sus brevets como salidas no competitivas. Larga el 5 de febrero a las 7:00 desde Chuy y la llegada límite es el 10 de febrero a las 12:00. Organiza Randonneurs Uruguay. El recorrido pasa por Rocha, Minas, Colonia del Sacramento, Mercedes, Trinidad y Florida. Incluye jersey y servicio de dropbag. El calendario de la organización lista también un BRM de 1000 km.
+  en: A 1,500 km loop of Uruguay in randonneur format. It has a 125-hour limit; the rules of Randonneurs Uruguay define its brevets as non-competitive rides. It starts on 5 February at 7:00 in Chuy, and the cut-off at the finish is 10 February at 12:00. Run by Randonneurs Uruguay. The route passes Rocha, Minas, Colonia del Sacramento, Mercedes, Trinidad and Florida. A jersey and a drop-bag service are included. The organizer's calendar also lists a 1,000 km BRM.
