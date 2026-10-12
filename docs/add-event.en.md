@@ -37,6 +37,7 @@ That's it. An automatic check reviews the format within a couple of minutes. If 
 | `city` | yes | City, spelled exactly as in [cities.yaml](../cities.yaml). If it is missing, add it to that list in the same pull request. | `Montevideo` |
 | `venue` | no | Start venue. Up to 120 characters. | `Rambla de Pocitos` |
 | `distances` | no | Up to 6 distances of up to 20 characters each, in square brackets, separated by commas. | `[10K, 5K]` |
+| `organizer` | no | Who organizes it, as they present themselves (a club, a company, a city government, a federation). Up to 120 characters. | `Club de Corredores de la Rambla` |
 | `links.site` | one of the three | Official organizer website. Must start with `https://`. | `https://example.org` |
 | `links.instagram` | one of the three | Official organizer Instagram. Must start with `https://`. | `https://instagram.com/example` |
 | `links.facebook` | one of the three | Official organizer Facebook. Must start with `https://`. | `https://facebook.com/example` |

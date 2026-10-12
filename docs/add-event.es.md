@@ -37,6 +37,7 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 | `city` | sí | Ciudad, escrita igual que en [cities.yaml](../cities.yaml). Si falta, agregala a esa lista en el mismo pull request. | `Montevideo` |
 | `venue` | no | Lugar de largada. Hasta 120 caracteres. | `Rambla de Pocitos` |
 | `distances` | no | Hasta 6 distancias de hasta 20 caracteres cada una, entre corchetes y separadas por comas. | `[10K, 5K]` |
+| `organizer` | no | Quién organiza, tal como se presenta (club, empresa, intendencia, federación). Hasta 120 caracteres. | `Club de Corredores de la Rambla` |
 | `links.site` | uno de los tres | Sitio oficial del organizador. Tiene que empezar con `https://`. | `https://example.org` |
 | `links.instagram` | uno de los tres | Instagram oficial del organizador. Tiene que empezar con `https://`. | `https://instagram.com/example` |
 | `links.facebook` | uno de los tres | Facebook oficial del organizador. Tiene que empezar con `https://`. | `https://facebook.com/example` |

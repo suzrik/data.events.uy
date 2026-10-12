@@ -14,6 +14,7 @@ sport: run
 city: Montevideo
 venue: Rambla de Pocitos
 distances: [10K, 5K]
+organizer: Club de Corredores de la Rambla
 links:
   site: https://example.org
   instagram: https://instagram.com/example
@@ -52,7 +53,7 @@ func TestEventAcceptsEquivalentSpellings(t *testing.T) {
 	tests := map[string]string{
 		"quoted date":          with("date: 2026-10-11", `date: "2026-10-11"`),
 		"numeric distances":    with("distances: [10K, 5K]", "distances: [42, 21]"),
-		"no optional fields":   with("venue: Rambla de Pocitos\ndistances: [10K, 5K]\n", ""),
+		"no optional fields":   with("venue: Rambla de Pocitos\ndistances: [10K, 5K]\norganizer: Club de Corredores de la Rambla\n", ""),
 		"only instagram":       with("  site: https://example.org\n", ""),
 		"only one language":    with("  en: Flat course along the waterfront.\n", ""),
 		"windows line endings": strings.ReplaceAll(validEvent, "\n", "\r\n"),
@@ -94,6 +95,8 @@ func TestEventRules(t *testing.T) {
 		{"city missing", with("city: Montevideo\n", ""), "city: is required"},
 		{"city not listed", with("city: Montevideo", "city: Atlantida"), `city: "Atlantida" is not in cities.yaml`},
 		{"venue too long", with("venue: Rambla de Pocitos", "venue: "+strings.Repeat("a", 121)), "venue: must be at most 120 characters, got 121"},
+		{"organizer too long", with("organizer: Club de Corredores de la Rambla", "organizer: "+strings.Repeat("a", 121)), "organizer: must be at most 120 characters, got 121"},
+		{"organizer as nested lines", with("organizer: Club de Corredores de la Rambla", "organizer:\n  name: Club"), "organizer: must be a single value"},
 		{"distances empty", with("[10K, 5K]", "[]"), "distances: must list at least one distance"},
 		{"distances too many", with("[10K, 5K]", "[1, 2, 3, 4, 5, 6, 7]"), "distances: must have at most 6 values, got 7"},
 		{"distance empty", with("[10K, 5K]", `[10K, ""]`), "distances[1]: must not be empty"},

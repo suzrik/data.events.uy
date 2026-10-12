@@ -35,6 +35,7 @@ func (p Problem) String() string {
 const (
 	maxName        = 120
 	maxVenue       = 120
+	maxOrganizer   = 120
 	maxDistances   = 6
 	maxDistance    = 20
 	maxDescription = 500
@@ -71,6 +72,7 @@ type event struct {
 	City        string            `yaml:"city"`
 	Venue       string            `yaml:"venue"`
 	Distances   []string          `yaml:"distances"`
+	Organizer   string            `yaml:"organizer"`
 	Links       links             `yaml:"links"`
 	Description map[string]string `yaml:"description"`
 }
@@ -86,7 +88,7 @@ var (
 	langKey = regexp.MustCompile(`^[a-z]{2}$`)
 	// indentedField matches a line where a top-level field name is preceded
 	// only by spaces or tabs; those names are never valid when indented.
-	indentedField = regexp.MustCompile(`^[ \t]+(name|date|end_date|status|entry|sport|city|venue|distances|days|week|time|links|description):`)
+	indentedField = regexp.MustCompile(`^[ \t]+(name|date|end_date|status|entry|sport|city|venue|distances|organizer|days|week|time|links|description):`)
 	goTypeRef     = regexp.MustCompile(` in type \S+`)
 )
 
@@ -106,7 +108,7 @@ const (
 // shortValueFields cannot hold free text, so a trailing comment is a note to move.
 var shortValueFields = []string{"date", "end_date", "status", "entry", "sport", "days", "week", "time"}
 
-var eventFields = []string{"name", "date", "end_date", "status", "entry", "sport", "city", "venue", "distances", "links", "description"}
+var eventFields = []string{"name", "date", "end_date", "status", "entry", "sport", "city", "venue", "distances", "organizer", "links", "description"}
 var linkFields = []string{"site", "instagram", "facebook", "register"}
 
 // rideFields are the fields of a ride file: a regular group ride or run has
@@ -286,6 +288,8 @@ func check(k kind, path string, src []byte, year string, cities map[string]bool)
 			shapeBad[key] = !scalar(key, val, &e.City)
 		case "venue":
 			shapeBad[key] = !scalar(key, val, &e.Venue)
+		case "organizer":
+			shapeBad[key] = !scalar(key, val, &e.Organizer)
 		case "distances":
 			switch {
 			case isNull(val):
@@ -501,6 +505,9 @@ func check(k kind, path string, src []byte, year string, cities map[string]bool)
 
 	if n := utf8.RuneCountInString(e.Venue); !shapeBad["venue"] && n > maxVenue {
 		add("venue", "must be at most %d characters, got %d", maxVenue, n)
+	}
+	if n := utf8.RuneCountInString(e.Organizer); !shapeBad["organizer"] && n > maxOrganizer {
+		add("organizer", "must be at most %d characters, got %d", maxOrganizer, n)
 	}
 
 	if !shapeBad["distances"] {

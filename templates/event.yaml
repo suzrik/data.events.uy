@@ -43,8 +43,9 @@ venue: Rambla de Pocitos
 # Distancias (opcional, hasta 6) / Distances (optional, up to 6)
 distances: [10K, 5K]
 
-# Enlaces oficiales del organizador, con https://. Al menos uno de site, instagram o facebook.
-# Official organizer links, with https://. At least one of site, instagram or facebook.
+# Organizador (opcional) y sus enlaces oficiales, con https://. Al menos uno de site, instagram o facebook.
+# Organizer (optional) and its official links, with https://. At least one of site, instagram or facebook.
+organizer: Club Rambla
 links:
   site: https://example.org
   instagram: https://instagram.com/example
