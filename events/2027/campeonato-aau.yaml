@@ -5,6 +5,7 @@ sport: run
 city: Montevideo
 entry: license
 distances: [10K, 5K]
+organizer: Agrupación de Atletas del Uruguay
 links:
   site: https://atletas.uy/
 description:

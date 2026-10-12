@@ -4,6 +4,7 @@ sport: run
 city: Montevideo
 venue: Rambla República de Gran Bretaña y Misiones
 distances: [10K, 5K]
+organizer: Correo Uruguayo
 links:
   site: https://www.correo.com.uy/correcorreo
   instagram: https://www.instagram.com/correouruguayo/

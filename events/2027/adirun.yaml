@@ -5,6 +5,7 @@ sport: run
 city: Montevideo
 venue: Dique Mauá
 distances: [10K, 5K]
+organizer: La Sierra Eventos Deportivos
 links:
   site: https://lasierra.uy/
   instagram: https://www.instagram.com/la_sierra_eventos_deportivos/

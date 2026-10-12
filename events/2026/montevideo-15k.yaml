@@ -4,6 +4,7 @@ sport: run
 city: Montevideo
 venue: Dique Mauá
 distances: [15K, 5K]
+organizer: Prodeporte
 links:
   site: https://prodeporte.com.uy/montevideo-15k/
   instagram: https://www.instagram.com/prodeporteuy/

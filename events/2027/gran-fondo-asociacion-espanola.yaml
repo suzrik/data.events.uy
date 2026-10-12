@@ -5,6 +5,7 @@ sport: road
 city: Montevideo
 venue: Rambla de Carrasco
 distances: [130 km, 61 km]
+organizer: eSport
 links:
   site: https://espanolagranfondo.uy/
   instagram: https://www.instagram.com/gfasociacionespanola/

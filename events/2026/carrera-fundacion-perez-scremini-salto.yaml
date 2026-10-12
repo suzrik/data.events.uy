@@ -4,6 +4,7 @@ sport: run
 city: Salto
 venue: Diagonal Puerto
 distances: [10K, 5K]
+organizer: Fundación Pérez Scremini
 links:
   site: https://perezscremini.org/
   instagram: https://www.instagram.com/perezscremini/

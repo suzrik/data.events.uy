@@ -5,6 +5,7 @@ sport: run
 city: Mercedes
 venue: Rambla de Mercedes
 distances: [50 km, 25 km, 10 km, 5 km]
+organizer: Asociación Uruguaya de Ultramaratón
 links:
   site: https://runningradiotv.com/elorigen/
 description:

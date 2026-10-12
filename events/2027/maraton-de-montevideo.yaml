@@ -5,6 +5,7 @@ sport: run
 city: Montevideo
 venue: Av. 18 de Julio, frente a la explanada de la Intendencia de Montevideo
 distances: [42K, 21K, 10K]
+organizer: Intendencia de Montevideo
 links:
   site: https://maratonmontevideo.uy/
 description:

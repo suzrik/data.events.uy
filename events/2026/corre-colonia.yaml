@@ -4,6 +4,7 @@ sport: run
 city: Colonia del Sacramento
 venue: Calle Sudamtex, detrás de Colonia Shopping
 distances: [10K, 5K]
+organizer: PepsiCo
 links:
   site: https://encarrera.uy/corre-colonia/
 description:
