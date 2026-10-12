@@ -136,3 +136,5 @@ En la descripción contá lo que alguien necesita saber antes de ir: ritmo o niv
 ## Corregir o cancelar un evento
 
 Abrí el archivo del evento en GitHub y hacé clic en el lápiz. Si GitHub te lo pide, hacé clic en **Fork this repository**. Cambiá lo necesario y enviá un pull request. Si el evento se canceló, enviá un pull request que elimine el archivo.
+
+Un evento que ya se corrió no se borra: su archivo queda en el catálogo y su página sigue en el sitio como registro de esa edición. Para la edición siguiente se crea un archivo nuevo en la carpeta de su año.

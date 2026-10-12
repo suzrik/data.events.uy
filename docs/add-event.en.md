@@ -136,3 +136,5 @@ In the description say what someone needs to know before going: pace or level, d
 ## Fixing or cancelling an event
 
 Open the event file on GitHub and click the pencil. If GitHub asks, click **Fork this repository**. Change what is needed and send a pull request. If the event was cancelled, send a pull request that deletes the file.
+
+An event that already took place is not deleted: its file stays in the catalog and its page stays on the site as the record of that edition. The next edition gets a new file in the folder of its year.
