@@ -108,7 +108,7 @@ const (
 // shortValueFields cannot hold free text, so a trailing comment is a note to move.
 var shortValueFields = []string{"date", "end_date", "status", "entry", "sport", "days", "week", "time"}
 
-var eventFields = []string{"name", "date", "end_date", "status", "entry", "sport", "city", "venue", "distances", "organizer", "links", "description"}
+var eventFields = []string{"name", "date", "end_date", "time", "status", "entry", "sport", "city", "venue", "distances", "organizer", "links", "description"}
 var linkFields = []string{"site", "instagram", "facebook", "register"}
 
 // rideFields are the fields of a ride file: a regular group ride or run has
@@ -417,6 +417,10 @@ func check(k kind, path string, src []byte, year string, cities map[string]bool)
 		}
 	}
 
+	if k == kindEvent && clock != "" && dateIsGood && monthOnly {
+		add("time", "needs a date with the day: write date as YYYY-MM-DD, or remove time")
+	}
+
 	if e.Status != "" && !shapeBad["status"] && !slices.Contains(statuses, e.Status) {
 		msg := "must be confirmed or tentative, got %q"
 		if h := valueHint("status", e.Status); h != "" {
@@ -489,9 +493,9 @@ func check(k kind, path string, src []byte, year string, cities map[string]bool)
 				add("week", "needs exactly one day in days, for example days: [sun] with week: 3")
 			}
 		}
-		if clock != "" && !shapeBad["time"] && !clockTime.MatchString(clock) {
-			add("time", `must be written as HH:MM on a 24-hour clock, for example "18:45", got %q`, clock)
-		}
+	}
+	if clock != "" && !shapeBad["time"] && !clockTime.MatchString(clock) {
+		add("time", `must be written as HH:MM on a 24-hour clock, for example "18:45", got %q`, clock)
 	}
 
 	if !shapeBad["city"] {

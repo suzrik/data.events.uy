@@ -31,6 +31,7 @@ That's it. An automatic check reviews the format within a couple of minutes. If 
 | `name` | yes | Event name, as the organizer publishes it. Up to 120 characters. | `Corrida Rambla 10K` |
 | `date` | yes | Date as year-month-day. If the organizer has only announced the month, year-month. For a multi-day event, the first day. | `2026-10-11` or `2027-04` |
 | `end_date` | no | Last day of a multi-day event, as year-month-day. Must be after `date`, at most 31 days later, and `date` must include the day. | `2026-10-12` |
+| `time` | no | Start time on the first day, on a 24-hour clock and in quotes, as the organizer publishes it. Only with a date that includes the day. | `"09:00"` |
 | `status` | no | `tentative` if the organizer has not confirmed the date yet. The other value, `confirmed`, is assumed if you leave the line out. | `tentative` |
 | `entry` | no | Who can take part: `open`, `license` or `elite`. Without this line, the event counts as open. | `license` |
 | `sport` | yes | `road` (road cycling), `mtb` (mountain bike), `gravel`, `run` (road running), `trail` (trail running), `tri` (triathlon and duathlon) or `roll` (skating). If a cycling race has two disciplines, put both in square brackets. | `run` or `[mtb, gravel]` |

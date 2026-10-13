@@ -31,6 +31,7 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 | `name` | sí | Nombre del evento, tal como lo publica el organizador. Hasta 120 caracteres. | `Corrida Rambla 10K` |
 | `date` | sí | Fecha en formato año-mes-día. Si el organizador solo anunció el mes, año-mes. En un evento de varios días, el primer día. | `2026-10-11` o `2027-04` |
 | `end_date` | no | Último día de un evento de varios días, en formato año-mes-día. Tiene que ser posterior a `date`, a lo sumo 31 días después, y `date` tiene que incluir el día. | `2026-10-12` |
+| `time` | no | Hora de largada del primer día, en 24 horas y entre comillas, tal como la publica el organizador. Solo con una fecha con día. | `"09:00"` |
 | `status` | no | `tentative` si el organizador todavía no confirmó la fecha. El otro valor, `confirmed`, se entiende si no escribís la línea. | `tentative` |
 | `entry` | no | Quién puede participar: `open`, `license` o `elite`. Sin esta línea, el evento se considera abierto. | `license` |
 | `sport` | sí | `road` (ciclismo de ruta), `mtb` (mountain bike), `gravel`, `run` (running de calle), `trail` (trail running), `tri` (triatlón y duatlón) o `roll` (patinaje). Si una carrera de ciclismo tiene dos disciplinas, van las dos entre corchetes. | `run` o `[mtb, gravel]` |

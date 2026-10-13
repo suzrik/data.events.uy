@@ -59,6 +59,7 @@ func TestEventAcceptsEquivalentSpellings(t *testing.T) {
 		"windows line endings": strings.ReplaceAll(validEvent, "\n", "\r\n"),
 		"byte order mark":      "\ufeff" + validEvent,
 		"120 non-ASCII chars":  with("name: Corrida Rambla 10K", "name: "+strings.Repeat("ñ", 120)),
+		"start time":           with("date: 2026-10-11\n", "date: 2026-10-11\ntime: \"07:30\"\n"),
 	}
 	for name, src := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -92,6 +93,9 @@ func TestEventRules(t *testing.T) {
 		{"sport list empty", with("sport: run", "sport: []"), "sport: is required"},
 		{"sport as nested lines", with("sport: run", "sport:\n  kind: run"), "sport: must be one value, or a list of cycling disciplines in square brackets, for example [mtb, gravel]"},
 		{"sport list item as list", with("sport: run", "sport: [mtb, [gravel]]"), "sport[1]: must be a single value"},
+		{"time not on a 24-hour clock", with("date: 2026-10-11\n", "date: 2026-10-11\ntime: 9am\n"), `time: must be written as HH:MM on a 24-hour clock, for example "18:45", got "9am"`},
+		{"time with a month-only date", with("date: 2026-10-11\n", "date: 2026-10\ntime: \"09:00\"\n"), "time: needs a date with the day: write date as YYYY-MM-DD, or remove time"},
+		{"time without the leading zero", with("date: 2026-10-11\n", "date: 2026-10-11\ntime: \"9:00\"\n"), `time: must be written as HH:MM on a 24-hour clock, for example "18:45", got "9:00"`},
 		{"city missing", with("city: Montevideo\n", ""), "city: is required"},
 		{"city not listed", with("city: Montevideo", "city: Atlantida"), `city: "Atlantida" is not in cities.yaml`},
 		{"venue too long", with("venue: Rambla de Pocitos", "venue: "+strings.Repeat("a", 121)), "venue: must be at most 120 characters, got 121"},

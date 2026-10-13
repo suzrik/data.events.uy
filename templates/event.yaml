@@ -15,11 +15,14 @@ name: Corrida Rambla 10K
 # Date: year-month-day. If the day is not announced yet, year-month only: 2026-10
 date: 2026-10-11
 
-# end_date, status y entry son opcionales. Para usar una de esas líneas, borrá el "#" que tiene adelante; si no la usás, dejala o borrala.
-# end_date, status and entry are optional. To use one of those lines, delete the "#" in front of it; if you do not use it, leave it or delete it.
+# end_date, time, status y entry son opcionales: para usar una, borrá el "#" de adelante.
+# end_date, time, status and entry are optional: to use one, delete the "#" in front of it.
 
 # Último día de un evento de varios días / Last day of a multi-day event
 #end_date: 2026-10-12
+
+# Hora de largada, 24 horas, entre comillas / Start time, 24-hour clock, in quotes
+#time: "09:00"
 
 # Fecha todavía sin confirmar por el organizador / Date not confirmed by the organizer yet
 #status: tentative
