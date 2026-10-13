@@ -34,7 +34,7 @@ That's it. An automatic check reviews the format within a couple of minutes. If 
 | `status` | no | `tentative` if the organizer has not confirmed the date yet. The other value, `confirmed`, is assumed if you leave the line out. | `tentative` |
 | `entry` | no | Who can take part: `open`, `license` or `elite`. Without this line, the event counts as open. | `license` |
 | `sport` | yes | `road` (road cycling), `mtb` (mountain bike), `gravel`, `run` (road running), `trail` (trail running), `tri` (triathlon and duathlon) or `roll` (skating). If a cycling race has two disciplines, put both in square brackets. | `run` or `[mtb, gravel]` |
-| `city` | yes | City, spelled exactly as in [cities.yaml](../cities.yaml). If it is missing, add it to that list in the same pull request. | `Montevideo` |
+| `city` | yes | City, spelled exactly as in [cities.yaml](../cities.yaml). If it is missing, add it to that list under its department, in the same pull request. | `Montevideo` |
 | `venue` | no | Start venue. Up to 120 characters. | `Rambla de Pocitos` |
 | `distances` | no | Up to 6 distances of up to 20 characters each, in square brackets, separated by commas. | `[10K, 5K]` |
 | `organizer` | no | Who organizes it, as they present themselves (a club, a company, a city government, a federation). Up to 120 characters. | `Club de Corredores de la Rambla` |

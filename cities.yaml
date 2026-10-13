@@ -1,101 +1,123 @@
-# Ciudades permitidas en el campo "city" de un evento.
-# Allowed values for the "city" field of an event.
+# Ciudades permitidas en el campo "city" de un evento, agrupadas por
+# departamento.
+# Allowed values for the "city" field of an event, grouped by department.
 #
-# Si falta una ciudad, agregala acá en el mismo pull request que el evento.
-# If a city is missing, add it here in the same pull request as the event.
-- Aguas Blancas
-- Aguas Dulces
-- Artigas
-- Atlántida
-- Baltasar Brum
-- Barra del Chuy
-- Barros Blancos
-- Boca del Cufré
-- Canelones
-- Carapé
-- Cardal
-- Cardona
-- Carmelo
-- Castillos
-- Casupá
-- Cerros Azules
-- Chamizo
-- Chuy
-- Ciudad de la Costa
-- Ciudad del Plata
-- Colonia Cosmopolita
-- Colonia del Sacramento
-- Conchillas
-- Cufré
-- Dolores
-- Durazno
-- Florida
-- Fray Bentos
-- Gerona
-- Gregorio Aznárez
-- Guazuvirá
-- Guichón
-- José Batlle y Ordóñez
-- Juan Lacaze
-- Juanicó
-- Kiyú
-- La Barra
-- La Concordia
-- La Cruz
-- La Floresta
-- La Paloma
-- La Pedrera
-- Lago Merín
-- Las Flores
-- Las Piedras
-- Lascano
-- Libertad
-- Mahoma
-- Mal Abrigo
-- Maldonado
-- Manantiales
-- Melo
-- Mercedes
-- Migues
-- Minas
-- Montes
-- Montevideo
-- Pando
-- Paso de los Toros
-- Paysandú
-- Piriápolis
-- Plácido Rosas
-- Polanco
-- Pueblo Garzón
-- Punta Ballena
-- Punta del Diablo
-- Punta del Este
-- Río Branco
-- Rivera
-- Rocha
-- Salto
-- San Carlos
-- San Javier
-- San José de Mayo
-- San Pedro
-- San Ramón
-- Santa Ana
-- Santa Clara de Olimar
-- Santa Lucía
-- Santa Rosa
-- Santa Teresa
-- Sarandí de Barceló
-- Sarandí del Yí
-- Sauce
-- Sauce de Portezuelo
-- Solís de Mataojo
-- Tacuarembó
-- Tarariras
-- Termas de Guaviyú
-- Treinta y Tres
-- Trinidad
-- Valizas
-- Villa Serrana
-- Villa Soriano
-- Young
-- Zapicán
+# Si falta una ciudad, agregala bajo su departamento en el mismo pull request
+# que el evento.
+# If a city is missing, add it under its department in the same pull request
+# as the event.
+Artigas:
+  - Artigas
+  - Baltasar Brum
+Canelones:
+  - Atlántida
+  - Barros Blancos
+  - Canelones
+  - Ciudad de la Costa
+  - Guazuvirá
+  - Juanicó
+  - La Floresta
+  - Las Piedras
+  - Migues
+  - Montes
+  - Pando
+  - San Ramón
+  - Santa Lucía
+  - Santa Rosa
+  - Sauce
+Cerro Largo:
+  - Lago Merín
+  - Melo
+  - Plácido Rosas
+  - Río Branco
+  - Sarandí de Barceló
+Colonia:
+  - Carmelo
+  - Colonia Cosmopolita
+  - Colonia del Sacramento
+  - Conchillas
+  - Cufré
+  - Juan Lacaze
+  - San Pedro
+  - Santa Ana
+  - Tarariras
+Durazno:
+  - Durazno
+  - Sarandí del Yí
+Flores:
+  - Trinidad
+Florida:
+  - Cardal
+  - Casupá
+  - Chamizo
+  - Florida
+  - La Cruz
+Lavalleja:
+  - Aguas Blancas
+  - José Batlle y Ordóñez
+  - Minas
+  - Polanco
+  - Solís de Mataojo
+  - Villa Serrana
+  - Zapicán
+Maldonado:
+  - Carapé
+  - Cerros Azules
+  - Gerona
+  - Gregorio Aznárez
+  - La Barra
+  - Las Flores
+  - Maldonado
+  - Manantiales
+  - Piriápolis
+  - Pueblo Garzón
+  - Punta Ballena
+  - Punta del Este
+  - San Carlos
+  - Sauce de Portezuelo
+Montevideo:
+  - Montevideo
+Paysandú:
+  - Guichón
+  - Paysandú
+  - Termas de Guaviyú
+Río Negro:
+  - Fray Bentos
+  - San Javier
+  - Young
+Rivera:
+  - Rivera
+Rocha:
+  - Aguas Dulces
+  - Barra del Chuy
+  - Castillos
+  - Chuy
+  - La Paloma
+  - La Pedrera
+  - Lascano
+  - Punta del Diablo
+  - Rocha
+  - Santa Teresa
+  - Valizas
+Salto:
+  - Salto
+San José:
+  - Boca del Cufré
+  - Ciudad del Plata
+  - Kiyú
+  - Libertad
+  - Mahoma
+  - Mal Abrigo
+  - San José de Mayo
+Soriano:
+  - Cardona
+  - Dolores
+  - La Concordia
+  - Mercedes
+  - Villa Soriano
+Tacuarembó:
+  - Paso de los Toros
+  - Tacuarembó
+Treinta y Tres:
+  - Santa Clara de Olimar
+  - Treinta y Tres

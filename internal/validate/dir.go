@@ -105,8 +105,19 @@ func Dir(root string) (Report, error) {
 	return rep, err
 }
 
-// loadCities reads cities.yaml. The returned set is nil when the list is
-// unavailable (missing or not a valid list), so that events are not also
+// departments are the nineteen departments of Uruguay, the keys of
+// cities.yaml.
+var departments = map[string]bool{
+	"Artigas": true, "Canelones": true, "Cerro Largo": true, "Colonia": true,
+	"Durazno": true, "Flores": true, "Florida": true, "Lavalleja": true,
+	"Maldonado": true, "Montevideo": true, "Paysandú": true, "Río Negro": true,
+	"Rivera": true, "Rocha": true, "Salto": true, "San José": true,
+	"Soriano": true, "Tacuarembó": true, "Treinta y Tres": true,
+}
+
+// loadCities reads cities.yaml: each department of Uruguay with the list of
+// its cities. The returned set is nil when the file is unavailable (missing
+// or not shaped as departments with lists), so that events are not also
 // reported for cities that cannot be checked. The error is non-nil only
 // when the file exists but cannot be read.
 func loadCities(fsys fs.FS) (map[string]bool, []Problem, error) {
@@ -124,35 +135,50 @@ func loadCities(fsys fs.FS) (map[string]bool, []Problem, error) {
 	}
 	set := map[string]bool{}
 	if len(doc.Content) == 0 {
-		return set, nil, nil // an empty file is an empty list
+		return set, nil, nil // an empty file lists no city
 	}
 	root := doc.Content[0]
-	if root.Kind != yaml.SequenceNode {
-		// Let the decoder describe what is wrong with the shape.
-		var list []string
-		if err := yaml.Unmarshal(src, &list); err != nil {
-			return nil, []Problem{{Path: path, Msg: cleanYAMLError(err)}}, nil
-		}
+	if root.Kind == yaml.ScalarNode && root.Tag == "!!null" {
 		return set, nil, nil // an empty document such as "~"
 	}
+	if root.Kind != yaml.MappingNode {
+		return nil, []Problem{{Path: path, Msg: "must list the cities under their department (Maldonado:, then - Punta del Este)"}}, nil
+	}
 	var ps []Problem
-	for i, item := range root.Content {
-		field := fmt.Sprintf("[%d]", i)
-		var c string
-		if item.Kind != yaml.ScalarNode || item.Decode(&c) != nil {
-			ps = append(ps, Problem{Path: path, Field: field, Msg: "must be a city name"})
+	seen := map[string]bool{}
+	for i := 0; i+1 < len(root.Content); i += 2 {
+		key, list := root.Content[i], root.Content[i+1]
+		var dep string
+		if key.Kind != yaml.ScalarNode || key.Decode(&dep) != nil || !departments[dep] {
+			ps = append(ps, Problem{Path: path, Field: key.Value, Msg: "is not a department of Uruguay"})
 			continue
 		}
-		switch {
-		case strings.TrimSpace(c) == "":
-			ps = append(ps, Problem{Path: path, Field: field, Msg: "must not be empty"})
-			continue
-		case c != strings.TrimSpace(c):
-			ps = append(ps, Problem{Path: path, Field: field, Msg: "must not start or end with a space"})
-		case set[c]:
-			ps = append(ps, Problem{Path: path, Field: field, Msg: fmt.Sprintf("%q is listed twice", c)})
+		if seen[dep] {
+			ps = append(ps, Problem{Path: path, Field: dep, Msg: "is listed twice"})
 		}
-		set[c] = true
+		seen[dep] = true
+		if list.Kind != yaml.SequenceNode {
+			ps = append(ps, Problem{Path: path, Field: dep, Msg: "must be a list of cities"})
+			continue
+		}
+		for j, item := range list.Content {
+			field := fmt.Sprintf("%s[%d]", dep, j)
+			var c string
+			if item.Kind != yaml.ScalarNode || item.Decode(&c) != nil {
+				ps = append(ps, Problem{Path: path, Field: field, Msg: "must be a city name"})
+				continue
+			}
+			switch {
+			case strings.TrimSpace(c) == "":
+				ps = append(ps, Problem{Path: path, Field: field, Msg: "must not be empty"})
+				continue
+			case c != strings.TrimSpace(c):
+				ps = append(ps, Problem{Path: path, Field: field, Msg: "must not start or end with a space"})
+			case set[c]:
+				ps = append(ps, Problem{Path: path, Field: field, Msg: fmt.Sprintf("%q is listed twice", c)})
+			}
+			set[c] = true
+		}
 	}
 	return set, ps, nil
 }
