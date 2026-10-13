@@ -1,6 +1,7 @@
 name: Gravel Experience Uruguay
 date: 2026-10-31
 end_date: 2026-11-01
+time: "07:00"
 sport: gravel
 city: La Paloma
 distances: [115 km, 68 km]
