@@ -1,0 +1,14 @@
+name: "5K Ruteros 60"
+date: 2026-12-20
+time: "09:00"
+sport: run
+city: Montevideo
+venue: "Parque Rivera, Dr. Benito Cuñarro y Cedel Carrasco"
+distances: [5K]
+organizer: "Ruteros 60"
+links:
+  facebook: https://www.facebook.com/ruteros60oficial/
+  register: https://cronometrarcarreras.com/inscripcion.html
+description:
+  es: "Carrera de 5 km de Ruteros 60 en el Parque Rivera, el domingo 20 de diciembre a las 09:00. La preinscripción es en línea; para confirmarla y recibir el dorsal hay que presentar la cédula a la organización."
+  en: "A 5 km race by Ruteros 60 at Parque Rivera on Sunday 20 December at 09:00. Pre-registration is online; to confirm it and collect the bib, show your ID to the organizers."
