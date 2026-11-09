@@ -16,6 +16,7 @@ Canelones:
   - Canelones
   - Castellanos
   - Ciudad de la Costa
+  - Costa Azul
   - Guazuvirá
   - Juanicó
   - La Floresta
@@ -33,6 +34,7 @@ Canelones:
   - Soca
 Cerro Largo:
   - Aceguá
+  - Cañas
   - Fraile Muerto
   - Lago Merín
   - Melo
@@ -59,8 +61,10 @@ Durazno:
   - Durazno
   - Sarandí del Yí
 Flores:
+  - Ismael Cortinas
   - Trinidad
 Florida:
+  - Capilla del Sauce
   - Cardal
   - Casupá
   - Chamizo
@@ -81,6 +85,7 @@ Maldonado:
   - Cerros Azules
   - Gerona
   - Gregorio Aznárez
+  - José Ignacio
   - La Barra
   - Las Flores
   - Maldonado
@@ -132,21 +137,27 @@ San José:
   - Libertad
   - Mahoma
   - Mal Abrigo
+  - Puntas de Valdez
   - San José de Mayo
+  - Villa María
 Soriano:
   - Cardona
   - Dolores
   - Egaña
+  - José Enrique Rodó
   - La Concordia
   - Mercedes
   - Palmar
+  - Palmitas
   - Santa Catalina
   - Villa Soriano
 Tacuarembó:
+  - Ansina
   - Caraguatá
   - Paso de los Toros
   - Tacuarembó
 Treinta y Tres:
+  - Cerro Chato
   - Santa Clara de Olimar
   - Treinta y Tres
   - Vergara
