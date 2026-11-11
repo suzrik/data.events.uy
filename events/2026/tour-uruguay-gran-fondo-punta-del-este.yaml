@@ -1,7 +1,7 @@
 name: Tour Uruguay Gran Fondo Punta del Este
 date: 2026-12-06
-time: "08:00"
-sport: road
+time: "07:00"
+sport: [road, mtb]
 city: Punta del Este
 venue: Rambla Claudio Williman
 distances: [110 km, 60 km]
@@ -11,5 +11,5 @@ links:
   instagram: https://www.instagram.com/esporturuguay/
   register: https://lolograste.uy/gran-fondo-punta-del-este
 description:
-  es: Etapa final de la temporada 2026 del Tour Uruguay, de eSport, con Gran Fondo de 110 km y Medio Fondo de 60 km abiertos a quienes se inscriban. El recorrido pasa por Punta Ballena y Las Cumbres, con viento costero. La largada es a las 8:00 y hay una Expo Feria.
-  en: Final stage of the 2026 Tour Uruguay season, run by eSport, with a 110 km Gran Fondo and a 60 km Medio Fondo open to anyone who registers. The course includes Punta Ballena and Las Cumbres, with coastal wind. The start is at 8:00 and there is an expo fair.
+  es: Etapa final de la temporada 2026 del Tour Uruguay, de eSport, con Gran Fondo de 110 km y Medio Fondo de 60 km abiertos a quienes se inscriban; eSport anuncia también un Medio Fondo MTB de la misma distancia, fuera del asfalto, con la misma largada. El recorrido pasa por Punta Ballena y Las Cumbres, con viento costero. La largada es a las 7:00, para todas las categorías; los kits se entregan el sábado 5 de 13:00 a 20:00. Hay una Expo Feria.
+  en: Final stage of the 2026 Tour Uruguay season, run by eSport, with a 110 km Gran Fondo and a 60 km Medio Fondo open to anyone who registers; eSport also announces an MTB Medio Fondo of the same distance, off the asphalt, with the same start. The course includes Punta Ballena and Las Cumbres, with coastal wind. The start is at 7:00 for all categories; kits are handed out on Saturday 5th from 13:00 to 20:00. There is an expo fair.

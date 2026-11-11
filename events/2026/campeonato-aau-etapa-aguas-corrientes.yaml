@@ -1,11 +1,13 @@
-name: Campeonato AAU, etapa Aguas Corrientes
+name: Carrera Fiesta del Agua
 date: 2026-12-06
 sport: run
 city: Aguas Corrientes
+venue: Museo Usina a Vapor
+distances: [10K, 5K]
 organizer: Agrupación de Atletas del Uruguay
 links:
-  site: https://atletas.uy/
+  instagram: https://www.instagram.com/carrerafiestadelagua/
   facebook: https://www.facebook.com/agrupaciondeatletasdeluruguay
 description:
-  es: Etapa del Campeonato 2026 de la Agrupación de Atletas del Uruguay (AAU) en Aguas Corrientes, Canelones, el domingo 6 de diciembre; es la última fecha del calendario oficial de la temporada. La AAU avisó que, si hay cambios en el calendario, serán de sede y no de fecha. La hora, las distancias y la inscripción de esta etapa todavía no fueron anunciadas.
-  en: Stage of the 2026 championship of the Agrupación de Atletas del Uruguay (AAU) in Aguas Corrientes, Canelones, on Sunday 6 December; it is the last date of the official season calendar. The AAU said that any changes to the calendar would be of venue, not of date. Start time, distances and registration for this stage have not been announced yet.
+  es: Carrera «Fiesta del Agua» de 5K y 10K, el domingo 6 de diciembre en Aguas Corrientes, Canelones, con largada en el museo Usina a Vapor. Es la última etapa del Campeonato 2026 de la Agrupación de Atletas del Uruguay (AAU), con apoyo del Municipio de Aguas Corrientes, el Gobierno de Canelones y OSE. La hora y el precio de la inscripción todavía no fueron publicados.
+  en: «Fiesta del Agua» 5K and 10K race, on Sunday 6 December in Aguas Corrientes, Canelones, starting at the Usina a Vapor museum. It is the last stage of the 2026 championship of the Agrupación de Atletas del Uruguay (AAU), supported by the Municipio de Aguas Corrientes, the Gobierno de Canelones and OSE. Start time and entry price are not published yet.
