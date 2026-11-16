@@ -96,7 +96,7 @@ func TestDirAcceptsSlugOfMaximumLength(t *testing.T) {
 func TestDirReportsEveryBadFileSortedByPath(t *testing.T) {
 	_, lines := report(t, map[string]string{
 		"cities.yaml":           citiesFile,
-		"events/2026/zeta.yaml": strings.Replace(validEvent, "sport: run", "sport: swim", 1),
+		"events/2026/zeta.yaml": strings.Replace(validEvent, "sport: run", "sport: ski", 1),
 		"events/2026/alfa.yaml": strings.Replace(validEvent, "city: Montevideo", "city: Atlantida", 1),
 	})
 	if len(lines) != 2 {

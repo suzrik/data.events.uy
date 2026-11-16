@@ -33,7 +33,7 @@ date: 2026-10-11
 #   elite: solo deportistas federados o profesionales; el público va a mirar / federated or professional athletes only; the public comes to watch
 #entry: open
 
-# Deporte / Sport: road | mtb | gravel | run | trail | tri (triatlón y duatlón / triathlon and duathlon) | roll
+# Deporte / Sport: road | mtb | gravel | run | trail | tri (triatlón, duatlón / triathlon, duathlon) | roll | swim
 # Ciclismo con dos disciplinas / Cycling with two disciplines: sport: [mtb, gravel]
 sport: run
 

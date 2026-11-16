@@ -78,7 +78,7 @@ func TestRideRules(t *testing.T) {
 		{"a status", validRide + "status: tentative\n", `rides/x.yaml: unknown field "status"`},
 		{"name missing", withRide("name: Salida de los Sábados\n", ""), "name: is required"},
 		{"sport missing", withRide("sport: road\n", ""), "sport: is required"},
-		{"sport unknown", withRide("sport: road", "sport: bike"), `sport: must be one of road, mtb, gravel, run, roll, trail, tri, got "bike"`},
+		{"sport unknown", withRide("sport: road", "sport: bike"), `sport: must be one of road, mtb, gravel, run, roll, swim, trail, tri, got "bike"`},
 		{"sports of two kinds", withRide("sport: road", "sport: [road, run]"), "sport: only the cycling disciplines road, mtb and gravel can be combined"},
 		{"city not listed", withRide("city: Montevideo", "city: Atlantida"), `city: "Atlantida" is not in cities.yaml`},
 		{"no organizer link", withRide("  instagram: https://instagram.com/example\n", "  register: https://example.org/form\n"), "links: at least one of site, instagram, facebook is required"},

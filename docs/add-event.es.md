@@ -34,7 +34,7 @@ Listo. Una verificación automática revisa el formato en un par de minutos. Si 
 | `time` | no | Hora de largada del primer día, en 24 horas y entre comillas, tal como la publica el organizador. Solo con una fecha con día. | `"09:00"` |
 | `status` | no | `tentative` si el organizador todavía no confirmó la fecha. El otro valor, `confirmed`, se entiende si no escribís la línea. | `tentative` |
 | `entry` | no | Quién puede participar: `open`, `license` o `elite`. Sin esta línea, el evento se considera abierto. | `license` |
-| `sport` | sí | `road` (ciclismo de ruta), `mtb` (mountain bike), `gravel`, `run` (running de calle), `trail` (trail running), `tri` (triatlón y duatlón) o `roll` (patinaje). Si una carrera de ciclismo tiene dos disciplinas, van las dos entre corchetes. | `run` o `[mtb, gravel]` |
+| `sport` | sí | `road` (ciclismo de ruta), `mtb` (mountain bike), `gravel`, `run` (running de calle), `trail` (trail running), `tri` (triatlón y duatlón) `roll` (patinaje) o `swim` (natación en aguas abiertas). Si una carrera de ciclismo tiene dos disciplinas, van las dos entre corchetes. | `run` o `[mtb, gravel]` |
 | `city` | sí | Ciudad, escrita igual que en [cities.yaml](../cities.yaml). Si falta, agregala en esa lista bajo su departamento, en el mismo pull request. | `Montevideo` |
 | `venue` | no | Lugar de largada. Hasta 120 caracteres. | `Rambla de Pocitos` |
 | `distances` | no | Hasta 6 distancias de hasta 20 caracteres cada una, entre corchetes y separadas por comas. | `[10K, 5K]` |

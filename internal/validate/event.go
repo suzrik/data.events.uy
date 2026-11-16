@@ -43,7 +43,7 @@ const (
 )
 
 var (
-	sports = []string{"road", "mtb", "gravel", "run", "roll", "trail", "tri"}
+	sports = []string{"road", "mtb", "gravel", "run", "roll", "swim", "trail", "tri"}
 	// cycling lists the sports one event can combine: a race with an MTB
 	// course and a gravel course belongs to both.
 	cycling  = []string{"road", "mtb", "gravel"}

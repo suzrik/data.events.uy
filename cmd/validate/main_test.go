@@ -46,7 +46,7 @@ func TestRunValidCatalog(t *testing.T) {
 
 func TestRunInvalidCatalog(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(catalog(t, strings.Replace(event, "sport: run", "sport: swim", 1)), &stdout, &stderr)
+	code := run(catalog(t, strings.Replace(event, "sport: run", "sport: ski", 1)), &stdout, &stderr)
 	if code != 1 {
 		t.Fatalf("code = %d, want 1", code)
 	}

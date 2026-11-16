@@ -84,9 +84,9 @@ func TestEventRules(t *testing.T) {
 		{"date wrong format", with("2026-10-11", "11/10/2026"), "date: must be a real date written as YYYY-MM-DD, or YYYY-MM when the day is not announced yet"},
 		{"date in another year", with("2026-10-11", "2027-01-10"), "date: year 2027 does not match the folder events/2026; move the file to events/2027/"},
 		{"sport missing", with("sport: run\n", ""), "sport: is required"},
-		{"sport unknown", with("sport: run", "sport: swim"), `sport: must be one of road, mtb, gravel, run, roll, trail, tri, got "swim"`},
-		{"sport is the old bike", with("sport: run", "sport: bike"), `sport: must be one of road, mtb, gravel, run, roll, trail, tri, got "bike"; cycling is now road, mtb or gravel`},
-		{"sport list with an unknown value", with("sport: run", "sport: [mtb, swim]"), `sport: must be one of road, mtb, gravel, run, roll, trail, tri, got "swim"`},
+		{"sport unknown", with("sport: run", "sport: ski"), `sport: must be one of road, mtb, gravel, run, roll, swim, trail, tri, got "ski"`},
+		{"sport is the old bike", with("sport: run", "sport: bike"), `sport: must be one of road, mtb, gravel, run, roll, swim, trail, tri, got "bike"; cycling is now road, mtb or gravel`},
+		{"sport list with an unknown value", with("sport: run", "sport: [mtb, ski]"), `sport: must be one of road, mtb, gravel, run, roll, swim, trail, tri, got "ski"`},
 		{"sport list mixes sports", with("sport: run", "sport: [run, trail]"), "sport: only the cycling disciplines road, mtb and gravel can be combined, got run, trail"},
 		{"sport list mixes cycling and running", with("sport: run", "sport: [mtb, trail]"), "sport: only the cycling disciplines road, mtb and gravel can be combined, got mtb, trail"},
 		{"sport list repeats a value", with("sport: run", "sport: [mtb, gravel, mtb]"), `sport: "mtb" appears more than once`},
@@ -147,7 +147,7 @@ func TestEventAcceptsCombinedCyclingDisciplines(t *testing.T) {
 
 func TestEventReportsAllProblemsAtOnce(t *testing.T) {
 	src := with("name: Corrida Rambla 10K\n", "")
-	src = strings.Replace(src, "sport: run", "sport: swim", 1)
+	src = strings.Replace(src, "sport: run", "sport: ski", 1)
 	src = strings.Replace(src, "site: https://example.org", "site: http://example.org", 1)
 	got := problems(src)
 	if len(got) != 3 {
@@ -171,7 +171,7 @@ func TestProblemString(t *testing.T) {
 
 func TestEventReportsEveryProblemOfShapeAndUnknownField(t *testing.T) {
 	src := validEvent + "nmae: typo\n"
-	src = strings.Replace(src, "sport: run", "sport: swim", 1)
+	src = strings.Replace(src, "sport: run", "sport: ski", 1)
 	got := problems(src)
 	if len(got) != 2 {
 		t.Fatalf("want 2 problems, got %v", got)
@@ -308,7 +308,7 @@ func TestEventSyntaxErrorHints(t *testing.T) {
 }
 
 func TestEventUnknownFieldsDoNotHideOtherProblems(t *testing.T) {
-	got := problems(with("sport: run", "sport: swim") + "hora: 9\n")
+	got := problems(with("sport: run", "sport: ski") + "hora: 9\n")
 	if len(got) != 2 {
 		t.Fatalf("problems = %q", got)
 	}
