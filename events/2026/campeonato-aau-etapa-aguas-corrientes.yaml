@@ -1,13 +1,16 @@
 name: Carrera Fiesta del Agua
 date: 2026-12-06
+time: "09:00"
 sport: run
 city: Aguas Corrientes
-venue: Museo Usina a Vapor
+venue: Planta de OSE, junto al Museo del Agua
 distances: [10K, 5K]
 organizer: Agrupación de Atletas del Uruguay
 links:
+  site: https://atletas.uy/ultima-fecha-aguas-corrientes-2026/
   instagram: https://www.instagram.com/carrerafiestadelagua/
   facebook: https://www.facebook.com/agrupaciondeatletasdeluruguay
+  register: https://forms.gle/d8Vcytbd1ruPAoVv5
 description:
-  es: Carrera «Fiesta del Agua» de 5K y 10K, el domingo 6 de diciembre en Aguas Corrientes, Canelones, con largada en el museo Usina a Vapor. Es la última etapa del Campeonato 2026 de la Agrupación de Atletas del Uruguay (AAU), con apoyo del Municipio de Aguas Corrientes, el Gobierno de Canelones y OSE. La hora y el precio de la inscripción todavía no fueron publicados.
-  en: «Fiesta del Agua» 5K and 10K race, on Sunday 6 December in Aguas Corrientes, Canelones, starting at the Usina a Vapor museum. It is the last stage of the 2026 championship of the Agrupación de Atletas del Uruguay (AAU), supported by the Municipio de Aguas Corrientes, the Gobierno de Canelones and OSE. Start time and entry price are not published yet.
+  es: Carrera «Fiesta del Agua» de 5K y 10K, el domingo 6 de diciembre en Aguas Corrientes, Canelones, a las 9:00, con largada en la planta de OSE junto al Museo del Agua, con recorrido nuevo junto al Santa Lucía; el de 5K mide 5700 m. Es la última etapa del Campeonato 2026 de la Agrupación de Atletas del Uruguay (AAU). La inscripción cuesta $500, o $1000 con la remera oficial de la AAU, en la sede de la AAU en el MAM o en la largada antes de correr.
+  en: «Fiesta del Agua» 5K and 10K race, on Sunday 6 December in Aguas Corrientes, Canelones, at 9:00, starting at the OSE plant next to the Museo del Agua, on a new course by the Santa Lucía; the 5K course is 5,700 m. It is the last stage of the 2026 championship of the Agrupación de Atletas del Uruguay (AAU). Entry costs $500, or $1,000 with the AAU's official shirt, at the AAU office in the MAM or at the start before the race.
